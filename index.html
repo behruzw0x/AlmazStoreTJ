@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="tj">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#EAF2FB">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>AlmazStoreTJ</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#EAF2FB;--card:rgba(255,255,255,.62);--card2:rgba(255,255,255,.82);
+  --input:rgba(255,255,255,.54);--border:rgba(255,255,255,.82);
+  --primary:#1674D1;--pl:rgba(22,116,209,.12);
+  --gold:#B27A12;--gl:rgba(178,122,18,.13);
+  --ok:#16865A;--okl:rgba(22,134,90,.13);
+  --red:#D84750;--redl:rgba(216,71,80,.13);
+  --fg:#15243A;--muted:#63728A;
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:15px;overflow:hidden}
+body{position:relative}
+body::before{content:"";position:fixed;inset:-18%;pointer-events:none;
+  background:
+    radial-gradient(circle at 6% 8%,rgba(119,190,255,.42),transparent 28%),
+    radial-gradient(circle at 96% 12%,rgba(217,194,255,.36),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(111,226,210,.24),transparent 34%),
+    linear-gradient(145deg,#F8FBFF 0%,#EAF2FB 52%,#E2ECF8 100%);
+  z-index:0}
+#app{width:100%;height:100%;position:relative;z-index:1;visibility:hidden;opacity:0;
+  transition:opacity .45s ease,visibility 0s linear .45s}
+#app.ready{visibility:visible;opacity:1;transition:opacity .45s ease}
+
+/* SPLASH SCREEN */
+.splash{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  padding:28px;background:transparent;opacity:1;visibility:visible;transition:opacity .45s ease,visibility 0s linear 0s}
+.splash.done{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility 0s linear .45s}
+.splash-card{width:min(100%,360px);padding:34px 26px 30px;text-align:center;
+  background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.9);border-radius:30px;
+  box-shadow:0 24px 70px rgba(47,76,111,.2),inset 0 1px 0 rgba(255,255,255,.95);
+  backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);
+  animation:splashCardIn .7s cubic-bezier(.2,.8,.2,1) both}
+.splash-gem{width:72px;height:72px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;
+  border-radius:24px;color:#fff;font-size:31px;
+  background:linear-gradient(145deg,#54B5FF,#1465C5);
+  box-shadow:0 14px 28px rgba(22,116,209,.26),inset 0 1px 0 rgba(255,255,255,.6);
+  animation:splashGemPulse 2s ease-in-out infinite}
+.splash-title{font-size:25px;font-weight:800;letter-spacing:.2px;color:var(--fg)}
+.splash-sub{margin-top:7px;font-size:11px;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted)}
+.splash-progress{height:7px;margin:30px 2px 10px;overflow:hidden;border-radius:10px;
+  background:rgba(117,145,178,.18);box-shadow:inset 0 1px 3px rgba(42,75,111,.12)}
+.splash-progress-fill{height:100%;width:0;border-radius:inherit;
+  background:linear-gradient(90deg,#55C8F5 0%,#1674D1 58%,#6E6DFF 100%);
+  box-shadow:0 0 16px rgba(22,116,209,.45);
+  animation:splashProgress 4s cubic-bezier(.22,.72,.28,1) forwards}
+.splash-status{font-size:12px;color:var(--muted);animation:splashStatus 4s ease both}
+@keyframes splashProgress{from{width:0}to{width:100%}}
+@keyframes splashCardIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes splashGemPulse{0%,100%{transform:scale(1);box-shadow:0 14px 28px rgba(22,116,209,.26),inset 0 1px 0 rgba(255,255,255,.6)}50%{transform:scale(1.045);box-shadow:0 18px 34px rgba(22,116,209,.34),inset 0 1px 0 rgba(255,255,255,.6)}}
+@keyframes splashStatus{0%,72%{opacity:.55}100%{opacity:1}}
+
+/* FA icon sizing helpers */
+.fa-icon-sm{font-size:14px}
+.fa-icon-md{font-size:18px}
+.fa-icon-lg{font-size:22px}
+.fa-icon-xl{font-size:28px}
+i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
+
+/* SCREENS */
+.scr{position:fixed;inset:0;background:transparent;display:block;visibility:hidden;
+  opacity:0;pointer-events:none;transform:translate3d(0,8px,0);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px;
+  will-change:opacity,transform;transition:opacity .24s ease,transform .3s cubic-bezier(.22,.61,.36,1),visibility 0s linear .3s}
+.scr.on{visibility:visible;opacity:1;pointer-events:auto;transform:translate3d(0,0,0);
+  transition-delay:0s}
+
+/* LANG SCREEN */
+.lang-wrap{min-height:100vh;display:flex;flex-direction:column;padding:0 24px 32px}
+.lang-top{text-align:center;padding:44px 0 28px}
+.lang-top .gem{font-size:56px;color:var(--primary);margin-bottom:4px}
+.lang-top h1{font-size:28px;color:var(--primary);font-weight:800;letter-spacing:.5px;margin-top:8px}
+.lang-top p{font-size:12px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-top:4px}
+.lang-mid{flex:1;display:flex;flex-direction:column;justify-content:center}
+.lang-mid h2{font-size:22px;font-weight:700;text-align:center;margin-bottom:6px}
+.lang-mid .sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px}
+.lang-list{display:flex;flex-direction:column;gap:12px}
+.lang-btn{display:flex;align-items:center;justify-content:space-between;padding:18px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:18px;
+  box-shadow:0 10px 28px rgba(58,93,133,.09),inset 0 1px 0 rgba(255,255,255,.7);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  color:var(--fg);font-size:17px;font-weight:600;cursor:pointer;transition:.2s;width:100%;text-align:left}
+.lang-btn.sel{background:var(--pl);border-color:var(--primary);color:var(--primary)}
+.lang-name-sub{font-size:13px;color:var(--muted);font-weight:400;margin-top:2px}
+.lang-btn.sel .lang-name-sub{color:var(--primary);opacity:.7}
+.chk{font-size:16px;display:none;color:var(--primary)}
+.lang-btn.sel .chk{display:block}
+
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;
+  border:none;border-radius:14px;padding:16px 20px;font-size:16px;font-weight:600;
+  cursor:pointer;width:100%;transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn-primary{background:linear-gradient(135deg,#2389E8,#1265C4);color:#fff;
+  box-shadow:0 10px 22px rgba(22,116,209,.22)}
+.btn-pill{border-radius:50px;width:auto;padding:15px 36px}
+.btn-back{background:none;border:none;color:var(--fg);font-size:20px;padding:14px 18px;cursor:pointer}
+.btn-ghost{background:rgba(255,255,255,.58);color:var(--fg);border:1px solid var(--border);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
+.btn-wa{background:#25D366;color:#fff}
+
+/* TABS */
+#scr-main{padding-bottom:0}
+.tabs{display:flex;flex-direction:column;height:100vh}
+.tab-pages{flex:1;overflow:hidden;position:relative}
+.tab-page{position:absolute;inset:0;overflow-y:auto;display:block;visibility:hidden;
+  opacity:0;pointer-events:none;transform:translate3d(0,8px,0);padding-bottom:110px;
+  will-change:opacity,transform;transition:opacity .22s ease,transform .28s cubic-bezier(.22,.61,.36,1),visibility 0s linear .28s}
+.tab-page.on{visibility:visible;opacity:1;pointer-events:auto;transform:translate3d(0,0,0);
+  transition-delay:0s}
+#tp-home{overflow-y:hidden;padding-bottom:102px}
+.tab-bar{position:absolute;z-index:20;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));
+  display:flex;align-items:center;min-height:68px;padding:7px 6px;
+  background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.86);
+  border-radius:24px;box-shadow:0 18px 42px rgba(55,87,123,.2),inset 0 1px 0 rgba(255,255,255,.9);
+  backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
+  padding-bottom:calc(7px + env(safe-area-inset-bottom))}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 2px;border:none;background:transparent;border-radius:18px;color:var(--muted);
+  font-size:11px;cursor:pointer;transition:.2s}
+.tab-btn.on{color:var(--primary);background:rgba(255,255,255,.66);
+  box-shadow:0 6px 16px rgba(74,111,153,.12),inset 0 1px 0 rgba(255,255,255,.9)}
+.tab-icon{font-size:20px;line-height:1.1}
+
+/* HOME */
+.home-hdr{display:flex;align-items:center;gap:10px;padding:14px 20px 8px}
+.home-hdr h2{font-size:18px;color:var(--primary);font-weight:700}
+.home-hdr p{font-size:11px;color:var(--muted)}
+.home-hdr-icon{font-size:30px;color:var(--primary)}
+.hero{text-align:center;padding:10px 20px 12px}
+.hero h2{font-size:25px;font-weight:700}
+.hero p{font-size:14px;color:var(--muted);margin-bottom:10px}
+.sec{margin-bottom:22px}
+.sec-hdr{display:flex;align-items:center;gap:7px;padding:0 20px;margin-bottom:10px}
+.sec-hdr h3{font-size:16px;font-weight:600}
+.category-tabs{display:flex;gap:8px;margin:0 16px 12px;padding:5px;
+  background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.82);
+  border-radius:19px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 8px 22px rgba(58,93,133,.07);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.category-tab{flex:1;min-width:0;border:none;border-radius:14px;padding:10px 5px;
+  background:transparent;color:var(--muted);font-size:12px;font-weight:600;line-height:1.15;
+  cursor:pointer;transition:.2s}
+.category-tab.on{color:var(--primary);background:rgba(255,255,255,.82);
+  box-shadow:0 5px 14px rgba(74,111,153,.13),inset 0 1px 0 rgba(255,255,255,.9)}
+.category-tab i{display:block;font-size:16px;margin-bottom:4px}
+.category-panel{display:block;max-height:0;overflow:hidden;padding-bottom:0;visibility:hidden;
+  opacity:0;pointer-events:none;transform:translate3d(0,8px,0);
+  will-change:max-height,opacity,transform;
+  transition:max-height .3s cubic-bezier(.22,.61,.36,1),opacity .2s ease,transform .3s cubic-bezier(.22,.61,.36,1),visibility 0s linear .3s}
+.category-panel.on{max-height:390px;padding-bottom:2px;visibility:visible;opacity:1;
+  pointer-events:auto;transform:translate3d(0,0,0);transition-delay:0s}
+
+/* PROMO NOTE */
+.promo-note{margin:0 20px 24px;padding:14px 16px;background:var(--pl);
+  border:1px solid var(--primary);border-radius:12px;font-size:12px;
+  color:var(--muted);line-height:1.6;text-align:center;display:flex;gap:10px;align-items:flex-start}
+.promo-note i{color:var(--primary);font-size:16px;margin-top:1px;flex-shrink:0}
+.promo-note p{text-align:left}
+.tab-page,.category-panel{scroll-behavior:smooth}
+
+/* PACKAGE CARD — VERTICAL */
+.pkg-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:0 16px}
+.pkg-card{display:flex;align-items:center;gap:8px;min-height:82px;padding:11px 10px;
+  background:var(--card);border:1.5px solid var(--border);border-radius:18px;cursor:pointer;transition:.15s;
+  box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.pkg-card:active{background:var(--card2)}
+.pkg-card.hi{background:var(--pl);border-color:var(--primary)}
+.pkg-icon{font-size:20px;flex-shrink:0;color:var(--primary)}
+.pkg-info{flex:1;min-width:0}
+.pkg-name{font-size:13px;font-weight:600;line-height:1.2}
+.pkg-desc{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.25}
+.pkg-price{font-size:13px;font-weight:700;color:var(--primary);flex-shrink:0;white-space:nowrap}
+.vou-card{position:relative;align-items:flex-start;padding-right:40px}
+.vou-card .pkg-info{padding-top:1px}
+.vou-card .vou-price{display:block;margin-top:4px}
+.vou-info-btn{position:absolute;top:10px;right:10px;width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;padding:0;border:1px solid rgba(22,116,209,.38);
+  border-radius:50%;background:rgba(255,255,255,.5);color:var(--primary);font-size:14px;
+  font-weight:700;line-height:1;cursor:pointer;transition:.15s}
+.vou-info-btn:active{background:var(--pl);transform:scale(.94)}
+
+.ch-card{display:flex;align-items:center;gap:12px;margin:4px 20px 20px;
+  padding:14px;background:var(--card);border:1px solid var(--border);border-radius:18px;cursor:pointer;
+  box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.ch-name{font-size:14px;font-weight:600}
+.ch-sub{font-size:12px;color:var(--muted);margin-top:1px}
+
+/* TAB HEADER */
+.tab-hdr{padding:18px 20px 20px}
+.tab-hdr h2{font-size:24px;font-weight:700}
+
+/* ORDERS */
+.ord-list{padding:0 20px;display:flex;flex-direction:column;gap:10px}
+.ord-card{padding:16px;background:var(--card);border:1px solid var(--border);border-radius:18px;cursor:pointer;
+  box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.ord-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.ord-id{font-size:14px;font-weight:700;color:var(--primary)}
+.ord-det{font-size:13px;color:var(--muted);line-height:1.55}
+.ord-arrow{font-size:17px;color:var(--muted);flex-shrink:0}
+.ord-eta{display:block;margin-top:12px;font-weight:700;font-size:15px;color:var(--primary);line-height:1.6}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty .empty-icon{font-size:48px;margin-bottom:10px;display:block;color:var(--border)}
+
+/* SUPPORT */
+.sup-wrap{padding:0 20px}
+.sup-card{display:flex;align-items:center;gap:14px;padding:16px;
+  background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:12px;
+  box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.sup-av{font-size:30px;color:var(--primary)}
+.sup-name{font-size:16px;font-weight:600}
+.sup-info{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* SETTINGS */
+.set-wrap{padding:0 20px}
+.set-sec{margin-bottom:24px}
+.set-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1px;margin-bottom:8px}
+.set-row{display:flex;align-items:center;gap:12px;padding:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:8px;cursor:pointer;
+  box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.row-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:17px;background:var(--pl);color:var(--primary)}
+.row-ico.red{background:var(--redl);color:var(--red)}
+.row-ico.green{background:#25D36622;color:#25D366}
+.row-ico.gold{background:var(--gl);color:var(--gold)}
+.row-lbl{flex:1;font-size:15px;font-weight:500}
+.row-lbl.red{color:var(--red)}
+.row-val{font-size:13px;color:var(--muted)}
+.row-arr{font-size:16px;color:var(--muted)}
+.lang-dd{background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:18px;overflow:hidden;
+  margin-bottom:8px;margin-top:-4px;box-shadow:0 10px 28px rgba(58,93,133,.1);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.lang-opt{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;
+  border-bottom:1px solid var(--border);cursor:pointer;font-size:15px}
+.lang-opt:last-child{border-bottom:none}
+.lang-opt.on{background:var(--pl);color:var(--primary)}
+.tok-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:8px;
+  box-shadow:0 8px 24px rgba(58,93,133,.08)}
+.tok-box p{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.4}
+
+/* FAQ ACCORDION */
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:8px;overflow:hidden;
+  box-shadow:0 8px 24px rgba(58,93,133,.07),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:14px;
+  cursor:pointer;font-size:13px;font-weight:500;gap:10px;line-height:1.4}
+.faq-q span{flex:1}
+.faq-chevron{font-size:12px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.faq-item.open .faq-chevron{transform:rotate(180deg)}
+.faq-a{padding:0 14px 14px;font-size:13px;color:var(--muted);line-height:1.6;display:none}
+.faq-a.open{display:block}
+
+/* HOW-TO STEPS */
+.how-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  margin-bottom:8px;font-size:13px;line-height:1.6;color:var(--muted)}
+.how-num{width:26px;height:26px;border-radius:50%;background:var(--pl);color:var(--primary);
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ORDER FLOW */
+.flow-hdr{padding-top:14px}
+.flow-body{padding:0 24px 40px}
+.step{font-size:13px;font-weight:500;color:var(--primary);margin-bottom:8px;display:inline-block}
+.flow-body h2{font-size:22px;font-weight:700;margin-bottom:20px}
+.inp-grp{margin-bottom:16px}
+.inp-lbl{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:6px}
+.inp-row{display:flex;align-items:center;gap:12px;padding:14px;
+  background:var(--input);border:1px solid var(--border);border-radius:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.inp-row.err{border-color:var(--red)}
+.inp-ico{font-size:15px;color:var(--muted);flex-shrink:0}
+input[type=text],input[type=password]{flex:1;background:none;border:none;
+  color:var(--fg);font-size:15px;outline:none;min-width:0}
+input::placeholder{color:var(--muted)}
+.inp-err{font-size:12px;color:var(--red);margin-top:5px}
+.eye-btn{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px}
+
+/* PAYMENT */
+.sum-card{display:flex;justify-content:space-between;align-items:center;padding:15px;
+  background:var(--pl);border:1px solid var(--primary);border-radius:12px;margin-bottom:14px}
+.sum-row{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.sum-txt{font-size:14px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sum-price{font-size:16px;font-weight:700;color:var(--primary);flex-shrink:0}
+.pay-note{font-size:14px;color:var(--muted);margin-bottom:12px}
+.copy-row{display:flex;justify-content:space-between;align-items:center;padding:15px;
+  background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:10px;
+  box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.copy-lbl{font-size:12px;color:var(--muted);margin-bottom:2px}
+.copy-val{font-size:15px;font-weight:600}
+.copy-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;
+  background:var(--pl);border:none;border-radius:8px;color:var(--primary);font-size:12px;
+  font-weight:500;cursor:pointer;flex-shrink:0;white-space:nowrap}
+.copy-btn.done{background:var(--okl);color:var(--ok)}
+.warn-card{display:flex;gap:10px;align-items:flex-start;padding:13px;
+  background:var(--gl);border:1px solid var(--gold);border-radius:12px;margin:14px 0;
+  font-size:13px;color:var(--muted);line-height:1.5}
+.warn-card i{color:var(--gold);font-size:15px;margin-top:1px;flex-shrink:0}
+
+/* SCREENSHOT */
+.upload-box{border:2px dashed var(--border);border-radius:14px;padding:42px 20px;
+  text-align:center;color:var(--muted);cursor:pointer;position:relative;margin-bottom:14px}
+.upload-box .up-icon{font-size:36px;display:block;margin-bottom:8px;color:var(--muted)}
+.file-inp{position:absolute;inset:0;opacity:0;cursor:pointer}
+.preview-wrap{position:relative;margin-bottom:14px}
+.preview-wrap img{width:100%;border-radius:12px;border:1px solid var(--border)}
+.rm-btn{position:absolute;top:-8px;right:-8px;width:28px;height:28px;
+  background:var(--red);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+
+/* CONFIRM */
+.conf-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:40px 24px;text-align:center}
+.conf-wrap .big{width:88px;height:88px;display:flex;align-items:center;justify-content:center;
+  font-size:58px;margin-bottom:18px;color:var(--ok);background:var(--okl);
+  border:3px solid rgba(22,134,90,.22);border-radius:50%;
+  box-shadow:0 12px 30px rgba(22,134,90,.2),inset 0 1px 0 rgba(255,255,255,.9)}
+.conf-wrap.success .big{animation:confSuccess .8s cubic-bezier(.2,.8,.2,1) both}
+.conf-wrap h2{font-size:22px;font-weight:700;margin-bottom:6px}
+.conf-wrap p{font-size:14px;color:var(--muted);margin-bottom:22px}
+.conf-box{background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:16px;width:100%;max-width:320px;margin-bottom:24px;text-align:left;font-size:14px;line-height:1.8}
+@keyframes confSuccess{0%{opacity:0;transform:scale(.45) rotate(-18deg)}
+  55%{opacity:1;transform:scale(1.12) rotate(4deg)}
+  75%{transform:scale(.96) rotate(-2deg)}
+  100%{transform:scale(1) rotate(0)}}
+
+/* MODAL */
+.modal{position:fixed;inset:0;z-index:200;display:flex;align-items:flex-end}
+.modal.hide{display:none}
+.m-ov{position:absolute;inset:0;background:rgba(26,48,78,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.m-box{position:relative;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.86);
+  border-radius:24px 24px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:20px;
+  box-shadow:0 -16px 50px rgba(47,76,111,.18);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
+.m-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.m-hdr h3{font-size:18px;font-weight:700}
+.m-cls{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.m-body{font-size:14px;line-height:1.8}
+.m-body img{max-width:100%;border-radius:10px;margin-top:10px;border:1px solid var(--border)}
+
+/* LEVEL-UP POPUP */
+.lvl-popup{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.lvl-popup.hide{display:none}
+.lvl-ov{position:absolute;inset:0;background:rgba(26,48,78,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.lvl-box{position:relative;background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.86);
+  border-radius:24px;width:100%;max-width:400px;max-height:78vh;overflow-y:auto;padding:16px 16px 20px;
+  box-shadow:0 18px 50px rgba(47,76,111,.2);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
+.lvl-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.lvl-hdr-title{font-size:16px;font-weight:700}
+.lvl-cls{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+.lvl-cls:active{background:var(--card2)}
+.upg-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:.15s;margin:0 20px 6px}
+.upg-card:active{background:var(--card2)}
+.upg-arr{font-size:20px;font-weight:700;color:var(--primary);flex-shrink:0}
+
+/* AVAIL MODAL */
+.avail-modal{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;padding:24px}
+.avail-modal.hide{display:none}
+.avail-ov{position:absolute;inset:0;background:rgba(26,48,78,.32);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+
+/* INFO MODAL */
+.warn-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:24px}
+.warn-modal.hide{display:none}
+.warn-ov{position:absolute;inset:0;background:rgba(26,48,78,.3);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.warn-box{position:relative;background:rgba(255,255,255,.82);border:1px solid var(--gold);border-radius:24px;
+  padding:24px;width:100%;max-width:340px;text-align:center;
+  box-shadow:0 18px 50px rgba(47,76,111,.2);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
+.warn-box .warn-big{font-size:36px;margin-bottom:12px;color:var(--gold)}
+.warn-box h3{font-size:17px;font-weight:700;margin-bottom:10px;color:var(--gold)}
+.warn-box p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.warn-box p a{color:var(--primary);text-decoration:underline}
+.warn-btns{display:flex;gap:10px}
+.warn-btns .btn{flex:1;padding:13px 10px;font-size:14px}
+
+/* TOAST */
+.toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(255,255,255,.78);border:1px solid var(--primary);color:var(--primary);
+  padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;
+  opacity:0;transition:.3s;z-index:999;white-space:nowrap;pointer-events:none;
+  box-shadow:0 10px 28px rgba(47,76,111,.16);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* STICKY FOOTER */
+.sticky-btn{padding:16px 20px;background:rgba(234,242,251,.62);border-top:1px solid var(--border);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+
+/* UTILS */
+.hide{display:none!important}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+<div id="splash" class="splash" aria-label="Loading AlmazStoreTJ">
+  <div class="splash-card">
+    <div class="splash-gem"><i class="fa-solid fa-gem"></i></div>
+    <div class="splash-title">AlmazStoreTJ</div>
+    <div class="splash-sub">Free Fire Diamond Store</div>
+    <div class="splash-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="splash-progress-fill"></div>
+    </div>
+    <div class="splash-status">Loading...</div>
+  </div>
+</div>
+<div id="app">
+
+<!-- ══════ MAIN (TABS) ══════ -->
+<div id="scr-main" class="scr">
+  <div class="tabs">
+    <div class="tab-pages">
+
+      <!-- HOME -->
+      <div id="tp-home" class="tab-page on">
+        <div class="home-hdr">
+          <span class="home-hdr-icon"><i class="fa-solid fa-gem"></i></span>
+          <div><h2>AlmazStoreTJ</h2><p>Free Fire TJ</p></div>
+        </div>
+        <div class="hero">
+          <h2 id="heroTitle">Фармоиш диҳед!</h2>
+          <p>Free Fire Diamonds &amp; Vouchers</p>
+          <button class="btn btn-primary btn-pill" id="btnOrderNow" style="width:auto">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span id="btnOrderTxt">Фармоиш диҳед!</span>
+          </button>
+        </div>
+        <div class="category-tabs" role="tablist" aria-label="Package categories">
+          <button class="category-tab on" data-category="dia" role="tab" aria-selected="true">
+            <i class="fa-solid fa-gem"></i><span id="catDia">Алмосҳо</span>
+          </button>
+          <button class="category-tab" data-category="vou" role="tab" aria-selected="false">
+            <i class="fa-solid fa-ticket"></i><span id="catVou">Ваучерҳо</span>
+          </button>
+          <button class="category-tab" data-category="lvl" role="tab" aria-selected="false">
+            <i class="fa-solid fa-arrow-trend-up"></i><span id="catLvl">Level-Up Package</span>
+          </button>
+        </div>
+        <div id="panel-dia" class="category-panel on" role="tabpanel">
+          <div class="pkg-list" id="listDia"></div>
+        </div>
+        <div id="panel-vou" class="category-panel" role="tabpanel">
+          <div class="pkg-list" id="listVou"></div>
+        </div>
+        <div id="panel-lvl" class="category-panel" role="tabpanel">
+          <div class="pkg-list" id="listLvl"></div>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div id="tp-orders" class="tab-page">
+        <div class="tab-hdr"><h2 id="titleOrds">Фармоишҳо</h2></div>
+        <div class="ord-list" id="ordList"></div>
+        <div id="ordEmpty" class="empty">
+          <span class="empty-icon"><i class="fa-solid fa-box-open"></i></span>
+          <p id="emptyTxt">Фармоише нест</p>
+        </div>
+      </div>
+
+      <!-- SUPPORT -->
+      <div id="tp-support" class="tab-page">
+        <div class="tab-hdr"><h2 id="titleSup">Пуштибонӣ</h2></div>
+        <div class="sup-wrap">
+          <div class="sup-card">
+            <span class="sup-av"><i class="fa-solid fa-user-headset"></i></span>
+            <div>
+              <p class="sup-name">@behruz63s</p>
+              <p class="sup-info" id="supDesc">Агар савол дошта бошед, бо мо тамос гиред</p>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="btnTg" style="margin-bottom:10px">
+            <i class="fa-brands fa-telegram"></i>
+            <span id="btnTgTxt">Нависад дар Telegram</span>
+          </button>
+          <button class="btn btn-wa" id="btnWA" style="margin-bottom:14px">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span id="btnWATxt">WhatsApp</span>
+          </button>
+          <div class="set-row" id="btnReviews">
+            <div class="row-ico gold"><i class="fa-solid fa-star"></i></div>
+            <span class="row-lbl" id="btnReviewsTxt">Баррасиҳо</span>
+            <span class="row-arr"><i class="fa-solid fa-chevron-right"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="tp-settings" class="tab-page">
+        <div class="tab-hdr"><h2 id="titleSet">Танзимот</h2></div>
+        <div class="set-wrap">
+          <!-- Language -->
+          <div class="set-sec">
+            <p class="set-label" id="setLangLbl">ЗАБОН</p>
+            <div class="set-row" id="rowLang">
+              <div class="row-ico"><i class="fa-solid fa-globe"></i></div>
+              <span class="row-lbl" id="rowLangLbl">Иваз кардани забон</span>
+              <span class="row-val" id="curLang">Тоҷикӣ</span>
+              <span class="row-arr"><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+            <div id="langDD" class="lang-dd hide">
+              <div class="lang-opt" data-l="tj">Тоҷикӣ <span id="ck-tj"><i class="fa-solid fa-check"></i></span></div>
+              <div class="lang-opt" data-l="ru">Русский <span id="ck-ru"></span></div>
+              <div class="lang-opt" data-l="en">English <span id="ck-en"></span></div>
+            </div>
+          </div>
+          <!-- FAQ -->
+          <div class="set-sec">
+            <p class="set-label" id="setFaqLbl">САВОЛҲОИ ЗУД-ЗУД ТАКРОРШАВАНДА</p>
+            <div id="faqList"></div>
+          </div>
+          <!-- How to Use -->
+          <div class="set-sec">
+            <p class="set-label" id="setHowLbl">ТАРЗИ ИСТИФОДА</p>
+            <div id="howList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-btn on" data-tab="home">
+        <span class="tab-icon"><i class="fa-solid fa-house"></i></span>
+        <span id="tabhome">Асосӣ</span>
+      </button>
+      <button class="tab-btn" data-tab="orders">
+        <span class="tab-icon"><i class="fa-solid fa-box"></i></span>
+        <span id="taborders">Фармоишҳо</span>
+      </button>
+      <button class="tab-btn" data-tab="support">
+        <span class="tab-icon"><i class="fa-solid fa-headset"></i></span>
+        <span id="tabsupport">Пуштибонӣ</span>
+      </button>
+      <button class="tab-btn" data-tab="settings">
+        <span class="tab-icon"><i class="fa-solid fa-gear"></i></span>
+        <span id="tabsettings">Танзимот</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ORDER: UID ══════ -->
+<div id="scr-uid" class="scr">
+  <div class="flow-hdr">
+    <button class="btn-back" data-back="main">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+  </div>
+  <div class="flow-body">
+    <span class="step">1 / 3</span>
+    <h2 id="titleUID">UID-ро ворид кунед</h2>
+    <div class="inp-grp">
+      <div class="inp-row" id="rowUID">
+        <span class="inp-ico"><i class="fa-solid fa-user"></i></span>
+        <input type="text" id="inUID" placeholder="123456789" maxlength="12" inputmode="numeric">
+      </div>
+      <p class="inp-err hide" id="errUID"></p>
+    </div>
+    <button class="btn btn-primary" id="btnUID">
+      <span id="btnUIDTxt">Идома</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ══════ ORDER: PAYMENT ══════ -->
+<div id="scr-pay" class="scr">
+  <div class="flow-hdr">
+    <button class="btn-back" data-back="uid">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+  </div>
+  <div class="flow-body">
+    <span class="step">2 / 3</span>
+    <h2 id="titlePay">Тафсилоти пардохт</h2>
+    <div class="sum-card">
+      <div class="sum-row">
+        <span style="font-size:15px;color:var(--primary)"><i class="fa-solid fa-gem"></i></span>
+        <span class="sum-txt" id="payPkg">—</span>
+      </div>
+      <span class="sum-price" id="payPrice">—</span>
+    </div>
+    <p class="pay-note" id="payTo">Ба ин рақам маблағ интиқол диҳед:</p>
+    <div class="copy-row">
+      <div>
+        <p class="copy-lbl">Alif Mobi</p>
+        <p class="copy-val">+992 800076063</p>
+      </div>
+      <button class="copy-btn" data-copy="+992 800076063">
+        <i class="fa-solid fa-copy"></i>
+        <span id="cpTxt1">Нусха</span>
+      </button>
+    </div>
+    <div class="copy-row">
+      <div>
+        <p class="copy-lbl">Alif Visa</p>
+        <p class="copy-val">4444 8888 1471 9187</p>
+      </div>
+      <button class="copy-btn" data-copy="4444 8888 1471 9187">
+        <i class="fa-solid fa-copy"></i>
+        <span id="cpTxt2">Нусха</span>
+      </button>
+    </div>
+    <div class="warn-card">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span id="payWarn">Маблағро дақиқ фиристед ва скриншотро нигоҳ доред.</span>
+    </div>
+  </div>
+  <div class="sticky-btn">
+    <button class="btn btn-primary" id="btnPay">
+      <span id="btnPayTxt">Идома</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ══════ ORDER: SCREENSHOT ══════ -->
+<div id="scr-ss" class="scr">
+  <div class="flow-hdr">
+    <button class="btn-back" data-back="pay">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+  </div>
+  <div class="flow-body">
+    <span class="step">3 / 3</span>
+    <h2 id="titleSS">Скриншотро бор кунед</h2>
+    <div class="upload-box" id="uploadBox">
+      <span class="up-icon"><i class="fa-solid fa-camera"></i></span>
+      <p id="uploadTxt">Скриншотро интихоб кунед</p>
+      <input type="file" class="file-inp" id="fileInp" accept="image/*">
+    </div>
+    <div class="preview-wrap hide" id="prevWrap">
+      <img id="prevImg" src="" alt="">
+      <button class="rm-btn" id="btnRm"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <button class="btn btn-primary" id="btnConfirm">
+      <span id="btnConfirmTxt">Тасдиқ кардан</span>
+      <i class="fa-solid fa-check"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ══════ ORDER: CONFIRMED ══════ -->
+<div id="scr-conf" class="scr">
+  <div class="conf-wrap">
+    <div class="big"><i class="fa-solid fa-circle-check"></i></div>
+    <h2 id="confTitle">Фармоиш фиристода шуд!</h2>
+    <p id="confSub">Мо дар 1 соат ҷавоб медиҳем.</p>
+    <div class="conf-box" id="confBox"></div>
+    <button class="btn btn-primary" style="max-width:300px" id="btnDone">
+      <span id="btnDoneTxt">Тамом</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════ ORDER DETAIL MODAL ══════ -->
+<div id="modal" class="modal hide">
+  <div class="m-ov" id="mOv"></div>
+  <div class="m-box">
+    <div class="m-hdr">
+      <h3 id="mTitle">Фармоиш</h3>
+      <button class="m-cls" id="mCls"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="m-body" id="mBody"></div>
+  </div>
+</div>
+
+<!-- ══════ INFO MODAL ══════ -->
+<!-- LEVEL-UP POPUP -->
+<div id="lvlPopup" class="lvl-popup hide">
+  <div class="lvl-ov" id="lvlOv"></div>
+  <div class="lvl-box">
+    <div class="lvl-hdr">
+      <span class="lvl-hdr-title" id="lvlPopupTitle">Upgrade Pass</span>
+      <button class="lvl-cls" id="lvlClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="lvlPkgList"></div>
+  </div>
+</div>
+
+<!-- AVAIL MODAL -->
+<div id="availModal" class="avail-modal hide">
+  <div class="avail-ov"></div>
+  <div class="warn-box" style="z-index:1">
+    <div class="warn-big"><i class="fa-solid fa-triangle-exclamation" style="color:var(--gold)"></i></div>
+    <h3 id="availTitle" style="margin-bottom:10px">Диққат!</h3>
+    <p id="availMsg" style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:20px;text-align:center"></p>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" id="availNo" style="flex:1"><span id="availNoTxt">Не, нест</span></button>
+      <button class="btn btn-primary" id="availYes" style="flex:1"><span id="availYesTxt">Бале, ҳаст</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="warnModal" class="warn-modal hide">
+  <div class="warn-ov" id="warnOv"></div>
+  <div class="warn-box">
+    <div class="warn-big"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <h3 id="warnTitle">Эълон!</h3>
+    <p id="warnMsg">Дӯстон, нархҳо мумкин аст иваз шуда бошанд. Тавсия мешавад пеш/баъд аз пардохт ба администратор муроҷиат кунед.</p>
+    <div class="warn-btns">
+      <button class="btn btn-ghost" id="warnCancel" style="flex:1">
+        <span id="warnCancelTxt">Рад мекунам</span>
+      </button>
+      <button class="btn btn-primary" id="warnOk" style="flex:1">
+        <span id="warnOkTxt">Фаҳмо</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+</div>
+<script>
+// ═══════════════════════════════════════════
+//  ALMAZSHOP — Single File App v3.2
+// ═══════════════════════════════════════════
+
+const TG_BOT_TOKEN   = '8853965646:AAHK9ISvS8iM1qi6J3Ts1dBLrrop-rzGEK8';
+const TG_DEFAULT_CHAT= '5961137759';
+const TG_ADMIN       = 'behruz63s';
+const TG_CH          = 'behruz_sellers';
+const WA_LINK        = 'https://wa.me/992800076063';
+const REVIEWS_LINK   = 'https://t.me/otz_behruz';
+
+const PKGS = [
+  {k:'d105',  n:'105 Diamonds', ntj:'105 Алмос', nru:'105 Алмазов', nen:'105 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'9.90смн', c:'dia', hi:false},
+  {k:'d326',  n:'326 Diamonds', ntj:'326 Алмос', nru:'326 Алмазов', nen:'326 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'29.90смн', c:'dia', hi:false},
+  {k:'d546',  n:'546 Diamonds', ntj:'546 Алмос', nru:'546 Алмазов', nen:'546 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'49.90смн', c:'dia', hi:false},
+  {k:'d1113', n:'1113 Diamonds', ntj:'1113 Алмос', nru:'1113 Алмазов', nen:'1113 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'99.90смн', c:'dia', hi:false},
+  {k:'d2398', n:'2398 Diamonds', ntj:'2398 Алмос', nru:'2398 Алмазов', nen:'2398 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'199.90смн', c:'dia', hi:false},
+  {k:'d6100', n:'6100 Diamonds', ntj:'6100 Алмос', nru:'6100 Алмазов', nen:'6100 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'499.90смн', c:'dia', hi:false},
+  {k:'vlt',
+    ntj:'Лайти Ҳафтагӣ (90)', nru:'Недельный Лайт (90)', nen:'Weekly Lite (90)',
+    dtj:'Фавран 20 алмос, баъдан 10 алмос ҳаррӯз. 1 ҳафта давом мекунад.',
+    dru:'Сразу 20 алмазов, потом 10 алмазов каждый день. Длится 1 неделю.',
+    den:'Instant 20 diamonds, then 10/day. Lasts 1 week.',
+    p:'6 смн', c:'vou', hi:false},
+  {k:'vwk',
+    ntj:'Ваучери Ҳафтагӣ (450)', nru:'Недельный Ваучер (450)', nen:'Weekly Voucher (450)',
+    dtj:'Фавран 100 алмос, баъдан 50 алмос ҳаррӯз. 1 ҳафта давом мекунад.',
+    dru:'Сразу 100 алмазов, потом 50 алмазов каждый день. Длится 1 неделю.',
+    den:'Instant 100 diamonds, then 50/day. Lasts 1 week.',
+    p:'17.90смн', c:'vou', hi:false},
+  {k:'vmo',
+    ntj:'Ваучери Моҳона (2600)', nru:'Месячный Ваучер (2600)', nen:'Monthly Voucher (2600)',
+    dtj:'Фавран 500 алмос, баъдан 70 алмос ҳаррӯз. 1 моҳ давом мекунад.',
+    dru:'Сразу 500 алмазов, потом 70 алмазов каждый день. Длится 1 месяц.',
+    den:'Instant 500 diamonds, then 70/day. Lasts 1 month.',
+    p:'99.90смн', c:'vou', hi:false},
+];
+
+const LVL_PKGS = [
+  {k:'lv6',   n:'Пропуск Прокачки ур. 6 (120)',  p:'6 смн'},
+  {k:'lv10',  n:'Пропуск Прокачки ур. 10 (200)', p:'10 смн'},
+  {k:'lv15',  n:'Пропуск Прокачки ур. 15 (200)', p:'10 смн'},
+  {k:'lv20',  n:'Пропуск Прокачки ур. 20 (200)', p:'10 смн'},
+  {k:'lv25',  n:'Пропуск Прокачки ур. 25 (200)', p:'10 смн'},
+  {k:'lv30',  n:'Пропуск Прокачки ур. 30 (350)', p:'15 смн'},
+  {k:'lvall', n:null, p:'60 смн'},
+];
+
+const TR = {
+  tj:{
+    continue:'Идома додан',
+    home:'Асосӣ', orders:'Фармоишҳо', support:'Пуштибонӣ', settings:'Танзимот',
+    orderNow:'Фармоиш диҳед!', dia:'Алмосҳо', vou:'Ваучерҳо',
+    joinCh:'Ба канал ҳамроҳ шавед',
+    enterUID:'UID-ро ворид кунед',
+    tgUser:'Telegram username-и шумо',
+    uidReq:'UID лозим аст',
+    uidBad:'UID бояд 5-12 рақам бошад',
+    tgReq:'Telegram username лозим аст',
+    next:'Идома',
+    payDet:'Тафсилоти пардохт',
+    payTo:'Ба ин рақам маблағ интиқол диҳед:',
+    copy:'Нусха', copied:'Нусха шуд',
+    payWarn:'Маблағро дақиқ фиристед ва скриншотро нигоҳ доред.',
+    upSS:'Скриншотро бор кунед',
+    selSS:'Скриншотро интихоб кунед',
+    confirm:'Тасдиқ кардан',
+    sent:'Фармоиш фиристода шуд!',
+    sentSub:'Мо дар 1 соат ҷавоб медиҳем.',
+    done:'Тамом',
+    empty:'Фармоише нест',
+    supDesc:'Агар савол дошта бошед, бо мо тамос гиред',
+    writeTg:'Нависед дар Telegram',
+    whatsapp:'WhatsApp',
+    reviews:'Баррасиҳо',
+    setLang:'ЗАБОН', chLang:'Иваз кардани забон',
+    contactMethod:'Тарзи тамос',
+    country:'Кишвар',
+    waReq:'Рақами телефон лозим аст',
+    waBad:'Рақами телефонро дуруст ворид кунед',
+    waPlaceholder:'Рақами телефон (бе код)',
+    tgPlaceholder:'@username',
+    warnTitle:'Диққат!',
+    warnMsg:'Бо идома додани харид, шумо ба <a href="https://t.me/behruz_prav/3" target="_blank">қоидаҳои мо</a> розигӣ додаед. Тавсия дода мешавад <a href="https://t.me/behruz_prav/3" target="_blank">қоида ва шартҳоро</a> хонда, баъд розигӣ диҳед.',
+    warnOk:'Розиям',
+    warnCancel:'Рад мекунам',
+    titleLvl:'Маҷмӯи Баланд Бардоштани Сатҳ',
+    upgName:'Пропуск Прокачки',
+    upgDesc:'Танҳо вақте харид кунед, ки ин баста дар аккаунти шумо дастрас бошад',
+    lvlAll:'Ҳамааш (1270)',
+    availTitle:'Диққат!',
+     availMsg:'Боварӣ ҳосил кунед, ки ин баста дар аккаунти шумо дастрас аст. Дар акси ҳол, танҳо ваучери Лайти Ҳафтагӣ дода мешавад ва мо ҷавобгӯ нестем.',
+    availYes:'Бале, ҳаст',
+    availNo:'Не, нест',
+     promoNote:'Фурӯши аккаунтҳои FF бо нархи арзон дар канали мо!',
+     etaMsg:'Ин фармоишро то санаи {date}, соати {time} иҷро карда, алмосҳои шуморо мефиристем. Агар мушкилие пеш ояд, ба мо муроҷиат кунед!',
+    faqTitle:'САВОЛҲОИ ЗУД-ЗУД ТАКРОРШАВАНДА',
+    howTitle:'ТАРЗИ ИСТИФОДА',
+    faqs:[
+      {q:'Чанд вақт лозим аст барои иҷрои фармоиш?', a:'Одатан дар давоми 1 соат.'},
+      {q:'Чи тавр UID-и худро ёбам?', a:'Барномаи Free Fire-ро кушоед → Профил → рақами ID-и 9 то 12 рақама дар зери аватари шумост.'},
+      {q:'Кадом равишҳои пардохт қабул мешаванд?', a:'Alif Mobi (+992 800076063) ва Alif Visa (4444 8888 1471 9187).'},
+      {q:'Оё алмосҳо 100% ба ҳисоби ман меоянд?', a:'Бале, мо кафолат медиҳем. Агар мушкил пеш ояд, дар 24 соат ҳал мешавад. Дар пуштибонӣ тамос гиред.'},
+      {q:'Агар фармоиш иҷро нашавад чӣ кор кунам?', a:'Бо пуштибонии мо тавассути Telegram (@behruz63s) ё WhatsApp тамос гиред.'},
+    ],
+    howSteps:[
+      'Паккейҷро аз менюи асосӣ интихоб кунед.',
+      'Огоҳиномаро хонед ва "Фаҳмо" зер кунед.',
+      'UID-и бозии худро ворид кунед.',
+      'Маблағро ба Alif Mobi ё Alif Visa дақиқ интиқол диҳед.',
+      'Скриншоти чекро бор кунед ва фармоишро тасдиқ кунед.',
+      'Интизор шавед — алмосҳо дар 1 соат ба ҳисоби шумо меоянд.',
+    ],
+  },
+  ru:{
+    continue:'Продолжить',
+    home:'Главная', orders:'Заказы', support:'Поддержка', settings:'Настройки',
+    orderNow:'Заказать!', dia:'Алмазы', vou:'Ваучеры',
+    joinCh:'Подписаться на канал',
+    enterUID:'Введите UID',
+    tgUser:'Ваш Telegram username',
+    uidReq:'UID обязателен',
+    uidBad:'UID должен содержать 5-12 цифр',
+    tgReq:'Telegram username обязателен',
+    next:'Далее',
+    payDet:'Реквизиты оплаты',
+    payTo:'Переведите точную сумму:',
+    copy:'Копировать', copied:'Скопировано',
+    payWarn:'Переведите точную сумму и сохраните скриншот.',
+    upSS:'Загрузите скриншот',
+    selSS:'Выберите скриншот',
+    confirm:'Подтвердить заказ',
+    sent:'Заказ отправлен!',
+    sentSub:'Мы обработаем в течение 1 часа.',
+    done:'Готово',
+    empty:'Заказов нет',
+    supDesc:'Если есть вопросы, пишите нам',
+    writeTg:'Написать в Telegram',
+    whatsapp:'WhatsApp',
+    reviews:'Отзывы',
+    setLang:'ЯЗЫК', chLang:'Сменить язык',
+    contactMethod:'Способ связи',
+    country:'Страна',
+    waReq:'Номер телефона обязателен',
+    waBad:'Введите корректный номер телефона',
+    waPlaceholder:'Номер телефона (без кода)',
+    tgPlaceholder:'@username',
+    warnTitle:'Внимание!',
+    warnMsg:'Продолжая покупку, вы соглашаетесь с <a href="https://t.me/behruz_prav/3" target="_blank">нашими правилами</a>. Рекомендуется <a href="https://t.me/behruz_prav/3" target="_blank">прочитать правила и условия</a> перед подтверждением.',
+    warnOk:'Согласен',
+    warnCancel:'Отказываюсь',
+    titleLvl:'Набор Повышения Уровня',
+    upgName:'Пропуск Прокачки',
+    upgDesc:'Покупайте только если этот набор доступен в вашем аккаунте',
+    lvlAll:'Все уровни (1270)',
+    availTitle:'Внимание!',
+     availMsg:'Убедитесь, что этот пакет доступен в вашем аккаунте. Иначе будет выдан только ваучер Недельный Лайт, и мы не несём ответственности.',
+    availYes:'Да, есть',
+    availNo:'Нет, нет',
+     promoNote:'Продажа аккаунтов FF по низкой цене в нашем канале!',
+     etaMsg:'Мы выполним этот заказ до {date}, в {time}, и отправим ваши алмазы. Если возникнут проблемы — свяжитесь с нами!',
+    faqTitle:'ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ',
+    howTitle:'КАК ПОЛЬЗОВАТЬСЯ',
+    faqs:[
+      {q:'Сколько времени занимает выполнение заказа?', a:'Обычно в течение 1 часа.'},
+      {q:'Как найти свой UID?', a:'Откройте Free Fire → Профиль → 9-12-значный номер ID под вашим аватаром.'},
+      {q:'Какие способы оплаты принимаются?', a:'Alif Mobi (+992 800076063) и Alif Visa (4444 8888 1471 9187).'},
+      {q:'Гарантируется ли доставка алмазов?', a:'Да, гарантируем. Если возникнет проблема — решим в течение 24 часов. Обратитесь в поддержку.'},
+      {q:'Что делать, если заказ не выполнен?', a:'Свяжитесь с поддержкой через Telegram (@behruz63s) или WhatsApp.'},
+    ],
+    howSteps:[
+      'Выберите пакет из главного меню.',
+      'Прочитайте уведомление и нажмите "Понятно".',
+      'Введите ваш UID игры.',
+      'Переведите точную сумму на Alif Mobi или Alif Visa.',
+      'Загрузите скриншот чека и подтвердите заказ.',
+      'Ожидайте — алмазы поступят в течение 1 часа.',
+    ],
+  },
+  en:{
+    continue:'Continue',
+    home:'Home', orders:'Orders', support:'Support', settings:'Settings',
+    orderNow:'Order Now!', dia:'Diamonds', vou:'Vouchers',
+    joinCh:'Join our channel',
+    enterUID:'Enter your UID',
+    tgUser:'Your Telegram username',
+    uidReq:'UID is required',
+    uidBad:'UID must be 5-12 digits',
+    tgReq:'Telegram username is required',
+    next:'Next',
+    payDet:'Payment Details',
+    payTo:'Transfer the exact amount to:',
+    copy:'Copy', copied:'Copied',
+    payWarn:'Transfer the exact amount and save your screenshot.',
+    upSS:'Upload Screenshot',
+    selSS:'Choose screenshot',
+    confirm:'Confirm Order',
+    sent:'Order Submitted!',
+    sentSub:'We will process within 1 hour.',
+    done:'Done',
+    empty:'No orders yet',
+    supDesc:'If you have questions, message us',
+    writeTg:'Message on Telegram',
+    whatsapp:'WhatsApp',
+    reviews:'Reviews',
+    setLang:'LANGUAGE', chLang:'Change Language',
+    contactMethod:'Contact Method',
+    country:'Country',
+    waReq:'Phone number is required',
+    waBad:'Please enter a valid phone number',
+    waPlaceholder:'Phone number (without code)',
+    tgPlaceholder:'@username',
+    warnTitle:'Notice!',
+    warnMsg:'By continuing your purchase, you agree to <a href="https://t.me/behruz_prav/3" target="_blank">our rules</a>. It is recommended to <a href="https://t.me/behruz_prav/3" target="_blank">read the rules and terms</a> before agreeing.',
+    warnOk:'I Agree',
+    warnCancel:'I Refuse',
+    titleLvl:'Level-Up Package',
+    upgName:'Upgrade Pass',
+    upgDesc:'Only purchase when this bundle is available in your account',
+    lvlAll:'All Levels (1270)',
+    availTitle:'Notice!',
+     availMsg:'Make sure this package is available in your account. Otherwise, only a Weekly Lite voucher will be provided, and we are not responsible.',
+    availYes:'Yes, it is',
+    availNo:'No, it\'s not',
+     promoNote:'FF accounts for sale at low prices in our channel!',
+     etaMsg:'We will complete this order by {date} at {time} and send you your diamonds. If any issues arise, contact us!',
+    faqTitle:'FREQUENTLY ASKED QUESTIONS',
+    howTitle:'HOW TO USE',
+    faqs:[
+      {q:'How long does it take to fulfill an order?', a:'Usually within 1 hour.'},
+      {q:'How do I find my UID?', a:'Open Free Fire → Profile → 9-12 digit ID number below your avatar.'},
+      {q:'What payment methods are accepted?', a:'Alif Mobi (+992 800076063) and Alif Visa (4444 8888 1471 9187).'},
+      {q:'Are diamonds guaranteed?', a:'Yes, guaranteed. If any issue arises, it will be resolved within 24 hours. Contact support.'},
+      {q:'What if my order isn\'t fulfilled?', a:'Contact our support via Telegram (@behruz63s) or WhatsApp.'},
+    ],
+    howSteps:[
+      'Select a package from the main menu.',
+      'Read the notice and tap "Got it".',
+      'Enter your game UID.',
+      'Transfer the exact amount to Alif Mobi or Alif Visa.',
+      'Upload the payment screenshot and confirm the order.',
+      'Wait — diamonds will arrive within 1 hour.',
+    ],
+  }
+};
+
+// ── SAFE STORAGE ─────────────────────────────
+// Some first-time file previews can block localStorage. Keep startup usable.
+function getStored(key, fallback=''){
+  try{
+    return window.localStorage.getItem(key) ?? fallback;
+  }catch(e){
+    return fallback;
+  }
+}
+function setStored(key, value){
+  try{
+    window.localStorage.setItem(key,value);
+  }catch(e){
+    // The app remains usable for this session when storage is unavailable.
+  }
+}
+
+// ── STATE ────────────────────────────────────
+const savedLang = getStored('almaz_lang');
+let lang = ['tj','ru','en'].includes(savedLang) ? savedLang : 'tj';
+let curOrder          = {};
+let ssData            = null;
+let pendingPkg        = null;
+
+// ── HELPERS ──────────────────────────────────
+const t  = k => (TR[lang] && TR[lang][k]) ? TR[lang][k] : k;
+const $  = id => document.getElementById(id);
+const $$ = s  => document.querySelectorAll(s);
+
+function toast(msg, dur=2500){
+  const el=$('toast'); el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('show'),dur);
+}
+function showScr(id){
+  $$('.scr').forEach(s=>s.classList.remove('on'));
+  $(id).classList.add('on');
+  $(id).scrollTop=0;
+}
+function showTab(name){
+  $$('.tab-page').forEach(p=>p.classList.remove('on'));
+  $('tp-'+name).classList.add('on');
+  $$('.tab-btn').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+  if(name==='orders') renderOrders();
+  if(name==='settings'){ updateUI(); renderFAQ(); }
+}
+
+// ── STORAGE ──────────────────────────────────
+function getOrds(){
+  try{
+    const orders=JSON.parse(getStored('almaz_orders','[]'));
+    return Array.isArray(orders) ? orders : [];
+  }catch(e){return[];}
+}
+function saveOrd(o){
+  const a=getOrds(); a.unshift(o);
+  setStored('almaz_orders',JSON.stringify(a));
+}
+function nextId(){
+  const d=arguments[0] instanceof Date ? arguments[0] : new Date();
+  const hh=String(d.getHours()).padStart(2,'0');
+  const mm=String(d.getMinutes()).padStart(2,'0');
+  const ss=String(d.getSeconds()).padStart(2,'0');
+  return `#FF${hh}${mm}${ss}`;
+}
+function dateTimeText(dateStr){
+  const d=new Date(dateStr);
+  const dd=String(d.getDate()).padStart(2,'0');
+  const mo=String(d.getMonth()+1).padStart(2,'0');
+  const yyyy=d.getFullYear();
+  const hh=String(d.getHours()).padStart(2,'0');
+  const mm=String(d.getMinutes()).padStart(2,'0');
+  const ss=String(d.getSeconds()).padStart(2,'0');
+  return `${dd}:${mo}:${yyyy} ${hh}:${mm}:${ss}`;
+}
+function etaTime(dateStr){
+  const d=new Date(dateStr);
+  d.setHours(d.getHours()+1);
+  const dd=String(d.getDate()).padStart(2,'0');
+  const mo=String(d.getMonth()+1).padStart(2,'0');
+  const hh=String(d.getHours()).padStart(2,'0');
+  const mm=String(d.getMinutes()).padStart(2,'0');
+  return {date:`${dd}:${mo}`,time:`${hh}:${mm}`};
+}
+
+// ── TELEGRAM ─────────────────────────────────
+async function tgNotify(text){
+  const token=TG_BOT_TOKEN;
+  const chatId=getStored('almaz_chatid')||TG_DEFAULT_CHAT;
+  try{
+    const r=await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:chatId,text,parse_mode:'HTML'})
+    });
+    const d=await r.json();
+    if(!d.ok) console.warn('TG error:',d);
+  }catch(e){console.log('TG notify failed:',e);}
+}
+async function tgNotifyWithPhoto(text,photoDataUrl){
+  const token=TG_BOT_TOKEN;
+  const chatId=getStored('almaz_chatid')||TG_DEFAULT_CHAT;
+  if(photoDataUrl){
+    try{
+      const res=await fetch(photoDataUrl);
+      const blob=await res.blob();
+      const form=new FormData();
+      form.append('chat_id',chatId);
+      form.append('caption',text);
+      form.append('parse_mode','HTML');
+      form.append('photo',blob,'check.jpg');
+      const r=await fetch(`https://api.telegram.org/bot${token}/sendPhoto`,{method:'POST',body:form});
+      const d=await r.json();
+      if(!d.ok){console.warn('TG photo error:',d);await tgNotify(text);}
+    }catch(e){console.log('TG photo failed:',e);await tgNotify(text);}
+  } else {
+    await tgNotify(text);
+  }
+}
+
+// ── RENDER PACKAGES ──────────────────────────
+function pkgDesc(pkg){
+  if(lang==='ru') return pkg.dru;
+  if(lang==='en') return pkg.den;
+  return pkg.dtj;
+}
+function pkgName(p){
+  if(lang==='ru' && p.nru) return p.nru;
+  if(lang==='en' && p.nen) return p.nen;
+  if(p.ntj) return p.ntj;
+  return p.n;
+}
+function renderPkgs(containerId, filter){
+  const list=filter?PKGS.filter(p=>p.c===filter):PKGS;
+  const c=$(containerId);
+  c.innerHTML=list.map(p=>`
+    <div class="pkg-card ${p.hi?'hi':''} ${p.c==='vou'?'vou-card':''}" data-k="${p.k}">
+      <span class="pkg-icon">${p.c==='dia'
+        ?'<i class="fa-solid fa-gem"></i>'
+        :'<i class="fa-solid fa-ticket"></i>'}</span>
+      <div class="pkg-info">
+        <p class="pkg-name">${pkgName(p)}</p>
+        ${p.c==='vou'
+          ?'<p class="pkg-price vou-price">'+p.p+'</p>'
+          :'<p class="pkg-desc">'+pkgDesc(p)+'</p>'}
+      </div>
+      ${p.c==='vou'?'<button class="vou-info-btn" type="button" aria-label="Voucher information">?</button>':''}
+      ${p.c==='vou'?'':'<span class="pkg-price">'+p.p+'</span>'}
+    </div>`).join('');
+  c.querySelectorAll('.pkg-card').forEach(card=>{
+    card.onclick=()=>{
+      const pkg=PKGS.find(p=>p.k===card.dataset.k);
+      pendingPkg=pkg;
+      showWarnModal();
+    };
+  });
+  c.querySelectorAll('.vou-info-btn').forEach(btn=>{
+    btn.onclick=e=>{
+      e.stopPropagation();
+      const pkg=PKGS.find(p=>p.k===btn.closest('.pkg-card').dataset.k);
+      showVoucherInfo(pkg);
+    };
+  });
+}
+
+function renderLvlPkgs(containerId){
+  const c=$(containerId);
+  c.innerHTML=LVL_PKGS.map(p=>`
+    <div class="pkg-card" data-lk="${p.k}">
+      <span class="pkg-icon"><i class="fa-solid fa-medal"></i></span>
+      <div class="pkg-info">
+        <p class="pkg-name">${lvlPkgDisplayName(p)}</p>
+      </div>
+      <span class="pkg-price">${p.p}</span>
+    </div>`).join('');
+  c.querySelectorAll('.pkg-card').forEach(card=>{
+    card.onclick=()=>{
+      pendingLvlPkg=LVL_PKGS.find(p=>p.k===card.dataset.lk);
+      showAvailModal();
+    };
+  });
+}
+
+let activeCategory='dia';
+function showCategory(category){
+  activeCategory=category;
+  $$('.category-tab').forEach(tab=>{
+    const active=tab.dataset.category===category;
+    tab.classList.toggle('on',active);
+    tab.setAttribute('aria-selected',String(active));
+  });
+  $$('.category-panel').forEach(panel=>{
+    panel.classList.toggle('on',panel.id==='panel-'+category);
+  });
+}
+
+// ── LEVEL-UP POPUP ────────────────────────────
+let pendingLvlPkg = null;
+function lvlPkgDisplayName(p){
+  if(p.k==='lvall') return t('lvlAll');
+  return p.n;
+}
+function showLvlPopup(){
+  $('lvlPopupTitle').textContent=t('upgName');
+  const c=$('lvlPkgList');
+  c.innerHTML=LVL_PKGS.map(p=>`
+    <div class="pkg-card" data-lk="${p.k}" style="margin-bottom:6px">
+      <span class="pkg-icon"><i class="fa-solid fa-medal"></i></span>
+      <div class="pkg-info">
+        <p class="pkg-name">${lvlPkgDisplayName(p)}</p>
+      </div>
+      <span class="pkg-price">${p.p}</span>
+    </div>`).join('');
+  c.querySelectorAll('.pkg-card').forEach(card=>{
+    card.onclick=()=>{
+      pendingLvlPkg=LVL_PKGS.find(p=>p.k===card.dataset.lk);
+      hideLvlPopup();
+      showAvailModal();
+    };
+  });
+  $('lvlPopup').classList.remove('hide');
+}
+function hideLvlPopup(){$('lvlPopup').classList.add('hide');}
+function showAvailModal(){
+  $('availTitle').textContent=t('availTitle');
+  $('availMsg').textContent=t('availMsg');
+  $('availYesTxt').textContent=t('availYes');
+  $('availNoTxt').textContent=t('availNo');
+  $('availModal').classList.remove('hide');
+}
+function hideAvailModal(){$('availModal').classList.add('hide');}
+
+// ── FAQ & HOW-TO ──────────────────────────────
+function renderFAQ(){
+  const faqs=TR[lang].faqs||[];
+  const steps=TR[lang].howSteps||[];
+  $('setFaqLbl').textContent=t('faqTitle');
+  $('setHowLbl').textContent=t('howTitle');
+  $('faqList').innerHTML=faqs.map((f,i)=>`
+    <div class="faq-item" data-fi="${i}">
+      <div class="faq-q">
+        <span>${f.q}</span>
+        <i class="fa-solid fa-chevron-down faq-chevron"></i>
+      </div>
+      <div class="faq-a">${f.a}</div>
+    </div>`).join('');
+  $('faqList').querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-q').onclick=()=>{
+      item.classList.toggle('open');
+      item.querySelector('.faq-a').classList.toggle('open');
+    };
+  });
+  $('howList').innerHTML=steps.map((s,i)=>`
+    <div class="how-item">
+      <div class="how-num">${i+1}</div>
+      <span>${s}</span>
+    </div>`).join('');
+}
+
+// ── INFO MODAL ───────────────────────────────
+function showVoucherInfo(pkg){
+  if(!pkg) return;
+  $('mTitle').textContent=pkgName(pkg);
+  $('mBody').innerHTML=`<p>${pkgDesc(pkg)}</p>`;
+  $('modal').classList.remove('hide');
+}
+function showWarnModal(){
+  $('warnTitle').textContent=t('warnTitle');
+  $('warnMsg').innerHTML=t('warnMsg');
+  $('warnOkTxt').textContent=t('warnOk');
+  $('warnCancelTxt').textContent=t('warnCancel');
+  $('warnModal').classList.remove('hide');
+}
+function hideWarnModal(){$('warnModal').classList.add('hide');}
+
+// ── RENDER HOME ──────────────────────────────
+function renderHome(){
+  renderPkgs('listDia','dia');
+  renderPkgs('listVou','vou');
+  renderLvlPkgs('listLvl');
+  $('catDia').textContent=t('dia');
+  $('catVou').textContent=t('vou');
+  $('catLvl').textContent=t('titleLvl');
+  showCategory(activeCategory);
+}
+
+// ── RENDER ORDERS ────────────────────────────
+function renderOrders(){
+  const ords=getOrds();
+  const c=$('ordList');
+  if(!ords.length){
+    c.innerHTML='';
+    $('ordEmpty').classList.remove('hide');
+    return;
+  }
+  $('ordEmpty').classList.add('hide');
+  c.innerHTML=ords.map(o=>`
+    <div class="ord-card" data-id="${o.id}">
+      <div class="ord-top">
+        <span class="ord-id">${o.id}</span>
+        <span class="ord-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+      </div>
+      <div class="ord-det">${o.pkgName} — ${o.price}<br>UID: ${o.uid}</div>
+    </div>`).join('');
+  c.querySelectorAll('.ord-card').forEach(card=>{
+    card.onclick=()=>showModal(card.dataset.id);
+  });
+}
+
+// ── ORDER DETAIL MODAL ───────────────────────
+function showModal(id){
+  const o=getOrds().find(x=>x.id===id);
+  if(!o) return;
+  const eta=etaTime(o.date);
+  const etaText=t('etaMsg').replace('{date}',eta.date).replace('{time}',eta.time);
+  $('mTitle').textContent=o.id;
+  $('mBody').innerHTML=`
+    <p><b>Паккейҷ:</b> ${o.pkgName}</p>
+    <p><b>Нарх:</b> ${o.price}</p>
+    <p><b>UID:</b> ${o.uid}</p>
+    <p><b>Сана:</b> ${new Date(o.date).toLocaleString()}</p>
+    <p class="ord-eta">${etaText}</p>`;
+  $('modal').classList.remove('hide');
+}
+
+// ── UPDATE UI ────────────────────────────────
+function updateUI(){
+  $('tabhome').textContent=t('home');
+  $('taborders').textContent=t('orders');
+  $('tabsupport').textContent=t('support');
+  $('tabsettings').textContent=t('settings');
+  $('heroTitle').textContent=t('orderNow');
+  $('btnOrderTxt').textContent=t('orderNow');
+  $('catDia').textContent=t('dia');
+  $('catVou').textContent=t('vou');
+  $('catLvl').textContent=t('titleLvl');
+  $('titleOrds').textContent=t('orders');
+  $('emptyTxt').textContent=t('empty');
+  $('titleSup').textContent=t('support');
+  $('supDesc').textContent=t('supDesc');
+  $('btnTgTxt').textContent=t('writeTg');
+  $('btnWATxt').textContent=t('whatsapp');
+  $('btnReviewsTxt').textContent=t('reviews');
+  $('titleSet').textContent=t('settings');
+  $('setLangLbl').textContent=t('setLang');
+  $('rowLangLbl').textContent=t('chLang');
+  ['tj','ru','en'].forEach(l=>{
+    const el=$('ck-'+l);
+    if(el) el.innerHTML=l===lang?'<i class="fa-solid fa-check"></i>':'';
+  });
+  $('curLang').textContent={tj:'Тоҷикӣ',ru:'Русский',en:'English'}[lang];
+  $$('#langDD .lang-opt').forEach(o=>o.classList.toggle('on',o.dataset.l===lang));
+  $('titleUID').textContent=t('enterUID');
+  $('btnUIDTxt').textContent=t('next');
+  $('titlePay').textContent=t('payDet');
+  $('payTo').textContent=t('payTo');
+  $('payWarn').textContent=t('payWarn');
+  $('btnPayTxt').textContent=t('next');
+  $('cpTxt1').textContent=t('copy');
+  $('cpTxt2').textContent=t('copy');
+  $('titleSS').textContent=t('upSS');
+  $('uploadTxt').textContent=t('selSS');
+  $('btnConfirmTxt').textContent=t('confirm');
+  $('confTitle').textContent=t('sent');
+  $('confSub').textContent=t('sentSub');
+  $('btnDoneTxt').textContent=t('done');
+  renderFAQ();
+}
+
+// ── INIT ─────────────────────────────────────
+function init(){
+  // Open the main menu directly. Language changes remain available in Settings.
+  showScr('scr-main');
+  showTab('home');
+  renderHome();
+  updateUI();
+
+  // Tabs
+  $$('.tab-btn').forEach(b=>{b.onclick=()=>showTab(b.dataset.tab);});
+
+  // Home
+  $$('.category-tab').forEach(b=>{
+    b.onclick=()=>showCategory(b.dataset.category);
+  });
+  $('btnOrderNow').onclick=()=>{
+    showCategory('dia');
+  };
+
+  // Support
+  $('btnTg').onclick=()=>window.open(`https://t.me/${TG_ADMIN}`,'_blank');
+  $('btnWA').onclick=()=>window.open(WA_LINK,'_blank');
+  $('btnReviews').onclick=()=>window.open(REVIEWS_LINK,'_blank');
+
+  // Settings: lang
+  $('rowLang').onclick=()=>$('langDD').classList.toggle('hide');
+  $$('#langDD .lang-opt').forEach(opt=>{
+    opt.onclick=()=>{
+      lang=opt.dataset.l;
+        setStored('almaz_lang',lang);
+      $('langDD').classList.add('hide');
+      updateUI();
+      renderHome();
+    };
+  });
+
+  // Back buttons
+  $$('[data-back]').forEach(btn=>{
+    btn.onclick=()=>{
+      const t2=btn.dataset.back;
+      if(t2==='main'){showScr('scr-main');showTab('home');}
+      else if(t2==='uid') showScr('scr-uid');
+      else if(t2==='pay') showScr('scr-pay');
+    };
+  });
+
+  // Level-Up popup
+  $('lvlClose').onclick=()=>hideLvlPopup();
+  $('lvlOv').onclick=()=>hideLvlPopup();
+
+  // Warn modal overlay → also goes back to home
+  $('warnOv').onclick=()=>{
+    hideWarnModal();
+    pendingPkg=null;
+  };
+
+  // Availability modal
+  $('availYes').onclick=()=>{
+    hideAvailModal();
+    if(!pendingLvlPkg) return;
+    pendingPkg={
+      k: pendingLvlPkg.k,
+      n: lvlPkgDisplayName(pendingLvlPkg),
+      ntj: lvlPkgDisplayName(pendingLvlPkg),
+      nru: lvlPkgDisplayName(pendingLvlPkg),
+      nen: lvlPkgDisplayName(pendingLvlPkg),
+      p: pendingLvlPkg.p,
+      c:'lvl'
+    };
+    pendingLvlPkg=null;
+    showWarnModal();
+  };
+  $('availNo').onclick=()=>{
+    hideAvailModal();
+    pendingLvlPkg=null;
+    showScr('scr-main');
+    showTab('home');
+  };
+
+  // Info modal
+  $('warnOk').onclick=()=>{
+    hideWarnModal();
+    if(!pendingPkg) return;
+    const pkg=pendingPkg; pendingPkg=null;
+    curOrder.pkg=pkg.k;
+    curOrder.pkgName=pkgName(pkg);
+    curOrder.price=pkg.p;
+    $('payPkg').textContent=pkgName(pkg);
+    $('payPrice').textContent=pkg.p;
+    showScr('scr-uid');
+  };
+  $('warnCancel').onclick=()=>{
+    hideWarnModal();
+    pendingPkg=null;
+    showScr('scr-main');
+    showTab('home');
+  };
+
+  // UID next
+  function showErr(errId,rowId,msg){
+    $(errId).textContent=msg;$(errId).classList.remove('hide');
+    $(rowId).classList.add('err');
+  }
+  function clearErr(errId,rowId){
+    $(errId).classList.add('hide');$(rowId).classList.remove('err');
+  }
+  $('btnUID').onclick=()=>{
+    const uid=$('inUID').value.trim();
+    if(!uid){showErr('errUID','rowUID',t('uidReq'));return;}
+    if(!/^\d{5,12}$/.test(uid)){showErr('errUID','rowUID',t('uidBad'));return;}
+    clearErr('errUID','rowUID');
+    curOrder.uid=uid;
+    showScr('scr-pay');
+  };
+
+  // Payment next
+  $('btnPay').onclick=()=>showScr('scr-ss');
+
+  // Copy buttons
+  $$('.copy-btn').forEach(btn=>{
+    btn.onclick=()=>{
+      navigator.clipboard.writeText(btn.dataset.copy).catch(()=>{
+        const ta=document.createElement('textarea');
+        ta.value=btn.dataset.copy;
+        document.body.appendChild(ta);
+        ta.select();document.execCommand('copy');
+        document.body.removeChild(ta);
+      });
+      const s=btn.querySelector('span');
+      btn.classList.add('done');s.textContent=t('copied');
+      setTimeout(()=>{btn.classList.remove('done');s.textContent=t('copy');},2000);
+    };
+  });
+
+  // Screenshot
+  $('uploadBox').onclick=()=>$('fileInp').click();
+  $('fileInp').onchange=e=>{
+    const f=e.target.files[0];if(!f) return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      ssData=ev.target.result;
+      $('prevImg').src=ssData;
+      $('uploadBox').classList.add('hide');
+      $('prevWrap').classList.remove('hide');
+    };
+    r.readAsDataURL(f);
+  };
+  $('btnRm').onclick=()=>{
+    ssData=null;$('prevImg').src='';
+    $('fileInp').value='';
+    $('uploadBox').classList.remove('hide');
+    $('prevWrap').classList.add('hide');
+  };
+
+  // Confirm order
+  $('btnConfirm').onclick=async()=>{
+    if(!ssData){
+      toast('Скриншот бор кунед / Загрузите скриншот / Upload screenshot',3000);
+      return;
+    }
+    // NOTE: ss (screenshot) is intentionally NOT saved to localStorage —
+    // it is sent to Telegram only. This prevents localStorage quota errors
+    // which caused the confirm button to silently stop working.
+     const orderDate=new Date();
+     const order={
+       id:nextId(orderDate),uid:curOrder.uid,
+      pkg:curOrder.pkg,pkgName:curOrder.pkgName,price:curOrder.price,
+       status:'pending',date:orderDate.toISOString()
+    };
+    try{ saveOrd(order); }
+    catch(e){
+      toast('Хатогии нигоҳдорӣ! Кэшро тоза кунед.',3000);
+      return;
+    }
+     $('confBox').innerHTML=`
+       <b>ID фармоиш:</b> ${order.id}<br>
+       <b>ID бозингар:</b> ${order.uid}<br>
+       <b>Баста:</b> ${order.pkgName} — ${order.price}<br>
+       <b>Вақт:</b> ${dateTimeText(order.date)}`;
+     $('scr-conf').querySelector('.conf-wrap').classList.remove('success');
+    showScr('scr-conf');
+     requestAnimationFrame(()=>requestAnimationFrame(()=>$('scr-conf').querySelector('.conf-wrap').classList.add('success')));
+    renderHome();
+    const msg=`🔔 <b>Фармоиши нав! / Новый заказ!</b>
+
+🆔 <b>${order.id}</b>
+💎 <b>${order.pkgName}</b>
+💰 Нарх: <b>${order.price}</b>
+👤 UID: <code>${order.uid}</code>
+🕐 ${new Date(order.date).toLocaleString()}
+
+<i>Ба барнома дароед ва тасдиқ кунед.</i>`;
+    tgNotifyWithPhoto(msg,ssData);
+  };
+
+  // Done
+  $('btnDone').onclick=()=>{
+    curOrder={};ssData=null;
+    $('inUID').value='';
+    $('fileInp').value='';
+    $('uploadBox').classList.remove('hide');
+    $('prevWrap').classList.add('hide');
+     $('scr-conf').querySelector('.conf-wrap').classList.remove('success');
+    showScr('scr-main');showTab('home');
+  };
+
+  // Order modal
+  $('mOv').onclick=()=>$('modal').classList.add('hide');
+  $('mCls').onclick=()=>$('modal').classList.add('hide');
+}
+
+function boot(){
+  const app=$('app');
+  const splash=$('splash');
+  try{
+    // Prepare the next screen while the splash is still covering the app.
+    init();
+  }catch(error){
+    console.error('AlmazStore startup error:',error);
+    showScr('scr-main');
+  }
+
+  // The splash is always first. Reveal the prepared screen only after
+  // the splash fade has finished, so it can never appear on top of the menu.
+  setTimeout(()=>{
+    splash.classList.add('done');
+    setTimeout(()=>app.classList.add('ready'),450);
+  },4000);
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',boot,{once:true});
+}else{
+  boot();
+}
+</script>
+</body>
+</html>
