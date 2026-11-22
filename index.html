@@ -743,7 +743,7 @@ if (tgApp) {
 const TG_BOT_TOKEN   = '8853965646:AAHK9ISvS8iM1qi6J3Ts1dBLrrop-rzGEK8';
 const TG_DEFAULT_CHAT= '5961137759';
 const TG_ADMIN       = 'behruz63s';
-const TG_CH          = 'behruz_sellers';
+const TG_CH          = 'AlmazStoreTJ_Official';
 const WA_LINK        = 'https://wa.me/992800076063';
 const REVIEWS_LINK   = 'https://t.me/otz_behruz';
 const ASTJ_API = 'https://astj-backend.safarovbehruz699.workers.dev';
@@ -1587,19 +1587,25 @@ function init(){
   $('mCls').onclick=()=>$('modal').classList.add('hide');
 }
 
-function boot(){
+async function boot(){
   const app=$('app');
   const splash=$('splash');
+
   try{
-    // Prepare the next screen while the splash is still covering the app.
+    const user = await authenticateTelegram();
+
+    if(!user){
+      alert('Ин сомона танҳо тавассути Telegram Mini App дастрас аст. Лутфан аз дохили Telegram кушоед.');
+      return;
+    }
+
     init();
+
   }catch(error){
     console.error('AlmazStore startup error:',error);
     showScr('scr-main');
   }
 
-  // The splash is always first. Reveal the prepared screen only after
-  // the splash fade has finished, so it can never appear on top of the menu.
   setTimeout(()=>{
     splash.classList.add('done');
     setTimeout(()=>app.classList.add('ready'),450);
