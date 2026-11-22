@@ -746,7 +746,32 @@ const TG_ADMIN       = 'behruz63s';
 const TG_CH          = 'behruz_sellers';
 const WA_LINK        = 'https://wa.me/992800076063';
 const REVIEWS_LINK   = 'https://t.me/otz_behruz';
+const ASTJ_API = 'https://astj-backend.safarovbehruz699.workers.dev';
 
+let telegramUser = null;
+
+async function authenticateTelegram() {
+  if (!tgApp || !tgApp.initData) return null;
+
+  try {
+    const response = await fetch(`${ASTJ_API}/auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ initData: tgApp.initData })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) return null;
+
+    telegramUser = result.user;
+    return telegramUser;
+
+  } catch (error) {
+    console.error('Telegram authentication failed:', error);
+    return null;
+  }
+  }
 const PKGS = [
   {k:'d105',  n:'105 Diamonds', ntj:'105 Алмос', nru:'105 Алмазов', nen:'105 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'9.90смн', c:'dia', hi:false},
   {k:'d326',  n:'326 Diamonds', ntj:'326 Алмос', nru:'326 Алмазов', nen:'326 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'29.90смн', c:'dia', hi:false},
