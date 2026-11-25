@@ -1530,45 +1530,68 @@ function init(){
     $('prevWrap').classList.add('hide');
   };
 
-  // Confirm order
+    // Confirm order
   $('btnConfirm').onclick=async()=>{
     if(!ssData){
       toast('Скриншот бор кунед / Загрузите скриншот / Upload screenshot',3000);
       return;
     }
-    // NOTE: ss (screenshot) is intentionally NOT saved to localStorage —
-    // it is sent to Telegram only. This prevents localStorage quota errors
-    // which caused the confirm button to silently stop working.
-     const orderDate=new Date();
-     const order={
-       id:nextId(orderDate),uid:curOrder.uid,
-      pkg:curOrder.pkg,pkgName:curOrder.pkgName,price:curOrder.price,
-       status:'pending',date:orderDate.toISOString()
+
+    const confirmBtn = $('btnConfirm');
+    if(confirmBtn.disabled) return;
+    confirmBtn.disabled = true;
+
+    const orderDate=new Date();
+    const order={
+      id:nextId(orderDate),
+      uid:curOrder.uid,
+      pkg:curOrder.pkg,
+      pkgName:curOrder.pkgName,
+      price:curOrder.price,
+      status:'pending',
+      date:orderDate.toISOString()
     };
-    try{ saveOrd(order); }
-    catch(e){
-      toast('Хатогии нигоҳдорӣ! Кэшро тоза кунед.',3000);
-      return;
+
+    try{
+      if(!tgApp || !tgApp.initData){
+        toast('Telegram тасдиқ нашуд. Мағозаро аз бот кушоед.',4000);
+        return;
+      }
+
+      const response = await fetch(`${ASTJ_API}/orders`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({initData:tgApp.initData,order:order})
+      });
+      const result = await response.json();
+
+      if(!response.ok || !result.success){
+        console.error('Order API error:',result);
+        toast(result.error === 'User is blocked'
+          ? 'Шумо аз фармоиш додан маҳдуд шудаед.'
+          : 'Фармоиш ба сервер сабт нашуд. Баъдтар такрор кунед.',4000);
+        return;
+      }
+
+      try{ saveOrd(order); }
+      catch(e){ console.error('Local order save failed:',e); }
+
+      $('confBox').innerHTML=`
+        <b>ID фармоиш:</b> ${order.id}<br>
+        <b>ID бозингар:</b> ${order.uid}<br>
+        <b>Баста:</b> ${order.pkgName} — ${order.price}<br>
+        <b>Вақт:</b> ${dateTimeText(order.date)}`;
+      $('scr-conf').querySelector('.conf-wrap').classList.remove('success');
+      showScr('scr-conf');
+      requestAnimationFrame(()=>requestAnimationFrame(()=>$('scr-conf').querySelector('.conf-wrap').classList.add('success')));
+      renderHome();
+
+    }catch(error){
+      console.error('Order submission failed:',error);
+      toast('Пайвастшавӣ ба сервер қатъ шуд. Фармоиш сабт нашуд.',4000);
+    }finally{
+      confirmBtn.disabled = false;
     }
-     $('confBox').innerHTML=`
-       <b>ID фармоиш:</b> ${order.id}<br>
-       <b>ID бозингар:</b> ${order.uid}<br>
-       <b>Баста:</b> ${order.pkgName} — ${order.price}<br>
-       <b>Вақт:</b> ${dateTimeText(order.date)}`;
-     $('scr-conf').querySelector('.conf-wrap').classList.remove('success');
-    showScr('scr-conf');
-     requestAnimationFrame(()=>requestAnimationFrame(()=>$('scr-conf').querySelector('.conf-wrap').classList.add('success')));
-    renderHome();
-    const msg=`🔔 <b>Фармоиши нав! / Новый заказ!</b>
-
-🆔 <b>${order.id}</b>
-💎 <b>${order.pkgName}</b>
-💰 Нарх: <b>${order.price}</b>
-👤 UID: <code>${order.uid}</code>
-🕐 ${new Date(order.date).toLocaleString()}
-
-<i>Ба барнома дароед ва тасдиқ кунед.</i>`;
-    tgNotifyWithPhoto(msg,ssData);
   };
 
   // Done
