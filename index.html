@@ -1561,7 +1561,8 @@ function init(){
       const response = await fetch(`${ASTJ_API}/orders`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({initData:tgApp.initData,order:order})
+        body:JSON.stringify({initData:tgApp.initData,order:order,screenshot:ssData})
+      
       });
       const result = await response.json();
 
