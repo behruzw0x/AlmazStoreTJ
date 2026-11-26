@@ -1567,9 +1567,8 @@ function init(){
 
       if(!response.ok || !result.success){
         console.error('Order API error:',result);
-        toast(result.error === 'User is blocked'
-          ? 'Шумо аз фармоиш додан маҳдуд шудаед.'
-          : 'Фармоиш ба сервер сабт нашуд. Баъдтар такрор кунед.',4000);
+        toast('Хатои сервер: ' + (result.error || result.message || JSON.stringify(result)), 6000);
+
         return;
       }
 
