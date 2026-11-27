@@ -213,7 +213,6 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 .ord-id{font-size:14px;font-weight:700;color:var(--primary)}
 .ord-det{font-size:13px;color:var(--muted);line-height:1.55}
 .ord-arrow{font-size:17px;color:var(--muted);flex-shrink:0}
-.ord-eta{display:block;margin-top:12px;font-weight:700;font-size:15px;color:var(--primary);line-height:1.6}
 .empty{text-align:center;padding:60px 20px;color:var(--muted)}
 .empty .empty-icon{font-size:48px;margin-bottom:10px;display:block;color:var(--border)}
 
@@ -406,6 +405,110 @@ input::placeholder{color:var(--muted)}
 .hide{display:none!important}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Liquid-glass refresh and accessible scrolling */
+:root{
+  --card:rgba(255,255,255,.48);--card2:rgba(255,255,255,.68);
+  --border:rgba(255,255,255,.76);--glass-shadow:0 18px 42px rgba(31,55,88,.15),inset 0 1px 0 rgba(255,255,255,.9);
+}
+html,body{overflow:hidden}
+#app{visibility:visible;opacity:1;transition:none}
+.splash{display:none!important}
+#scr-main .tabs{height:100dvh;height:100vh}
+#scr-main .tab-pages{overflow:visible}
+#tp-home{overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:190px!important}
+#tp-home .category-panel{max-height:none!important;overflow:visible;padding-bottom:8px;visibility:visible}
+#tp-home .category-panel:not(.on){display:none}
+.home-hdr{padding-top:max(18px,env(safe-area-inset-top))}
+.home-hdr h2{font-size:20px}
+.home-hdr p{letter-spacing:.2px}
+.hero{display:none!important}
+.category-tabs,.tab-bar,.pkg-card,.ord-card,.sup-card,.set-row,.copy-row,.sum-card,.inp-row,.m-box,.lvl-box,.warn-box{
+  border-color:rgba(255,255,255,.72);
+  box-shadow:var(--glass-shadow);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+}
+.category-tabs{background:rgba(255,255,255,.46);border-radius:22px}
+.category-tab{min-height:54px;font-size:11px}
+.category-tab.on{background:rgba(255,255,255,.72)}
+.pkg-list{gap:10px}
+.pkg-card{
+  position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0;
+  min-height:168px;padding:42px 12px 10px;border-radius:20px;overflow:hidden;
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),background .2s,border-color .2s,box-shadow .2s;
+}
+.pkg-card::before,.pay-action::before,.checkout-bar::before,.tab-bar::before{
+  content:"";position:absolute;inset:0 0 auto;height:45%;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.42),transparent 70%);
+}
+.pkg-card:active{transform:scale(.985)}
+.pkg-card.hi{background:rgba(77,154,247,.16);border-color:rgba(22,116,209,.52)}
+.pkg-top{position:absolute;top:10px;left:11px;right:11px;display:flex;align-items:center;justify-content:space-between}
+.pkg-top .discount-badge{position:static}
+.pkg-icon{font-size:22px;filter:drop-shadow(0 4px 8px rgba(22,116,209,.2))}
+.pkg-check{width:25px;height:25px;border:1.5px solid rgba(99,114,138,.35);border-radius:8px;background:rgba(255,255,255,.32);
+  display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;cursor:pointer}
+.pkg-card.hi .pkg-check{border-color:var(--primary);background:rgba(22,116,209,.15)}
+.pkg-name{font-size:13px;min-height:32px;line-height:1.25}
+.pkg-price{font-size:12px;margin-top:5px}
+.pkg-desc{font-size:10px;min-height:14px}
+.pkg-bottom{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:auto;padding-top:10px;min-height:37px}
+.qty-stepper{display:flex;align-items:center;gap:8px;height:30px;padding:3px;border-radius:12px;
+  background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
+.qty-stepper button{width:27px;height:24px;border:0;border-radius:9px;background:rgba(255,255,255,.74);color:var(--primary);font-size:17px;font-weight:700;line-height:1;cursor:pointer}
+.qty-stepper span{min-width:14px;text-align:center;font-size:12px;font-weight:700}
+.discount-badge{display:inline-flex;align-items:center;gap:3px;padding:4px 6px;border-radius:9px;background:rgba(128,78,212,.14);color:#7644C7;font-size:9px;font-weight:700;white-space:nowrap}
+.vou-card .pkg-icon{font-size:24px}
+.vou-card.voucher-lite .pkg-icon{color:#26A8FF;filter:drop-shadow(0 0 8px rgba(38,168,255,.6))}
+.vou-card.voucher-week .pkg-icon{color:#9958ED;filter:drop-shadow(0 0 8px rgba(153,88,237,.65))}
+.vou-card.voucher-month .pkg-icon{color:#D9A31D;filter:drop-shadow(0 0 8px rgba(217,163,29,.62))}
+.checkout-bar{position:fixed;z-index:21;left:14px;right:14px;bottom:calc(88px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:12px;padding:12px;border-radius:22px;
+  background:rgba(246,250,255,.7);border:1px solid rgba(255,255,255,.88);
+  box-shadow:0 16px 42px rgba(31,55,88,.2),inset 0 1px 0 rgba(255,255,255,.96);
+  backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);
+  opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;
+  transition:opacity .3s ease,transform .42s cubic-bezier(.2,.8,.2,1)}
+.checkout-bar.on{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.checkout-summary{flex:1;min-width:0}
+.checkout-items{font-size:11px;font-weight:600;line-height:1.35;max-height:30px;overflow:hidden;color:var(--fg)}
+.checkout-total{margin-top:3px;font-size:14px;font-weight:800;color:var(--primary)}
+.checkout-btn{position:relative;overflow:hidden;flex-shrink:0;width:auto;padding:13px 16px;border-radius:16px}
+.pay-actions{display:grid;gap:10px;margin:12px 0}
+.pay-action{position:relative;overflow:hidden;min-height:54px;padding:14px 16px;border-radius:17px;border:1px solid rgba(255,255,255,.82);
+  display:flex;align-items:center;justify-content:center;gap:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;
+  box-shadow:0 10px 26px rgba(31,55,88,.14),inset 0 1px 0 rgba(255,255,255,.54);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .2s}
+.pay-action:active{transform:scale(.98);filter:brightness(.96)}
+.pay-alif{background:linear-gradient(135deg,#20B973,#09885A);box-shadow:0 10px 27px rgba(13,158,99,.24),inset 0 1px 0 rgba(255,255,255,.55)}
+.pay-dc{background:linear-gradient(135deg,#3E9BFA,#1D63C7);box-shadow:0 10px 27px rgba(39,115,210,.26),inset 0 1px 0 rgba(255,255,255,.55)}
+.pay-other{background:rgba(255,255,255,.4);color:var(--fg);border-color:rgba(255,255,255,.85)}
+.pay-reminder{display:flex;gap:10px;align-items:flex-start;margin:12px 0 4px;padding:13px 14px;
+  border:1px solid rgba(22,116,209,.25);border-radius:16px;background:rgba(90,164,255,.12);
+  color:var(--fg);font-size:12px;line-height:1.5;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.pay-reminder i{color:var(--primary);margin-top:2px}
+.bank-steps{padding-left:22px;margin:0 0 16px}
+.bank-steps li{padding:5px 0 5px 3px}
+.bank-copy{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 16px;padding:12px;
+  background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.82);border-radius:15px}
+.bank-copy strong{font-size:17px;letter-spacing:.3px}
+.bank-modal{position:fixed;inset:0;z-index:450;display:flex;align-items:center;justify-content:center;padding:20px}
+.bank-modal.hide{display:none}
+.bank-ov{position:absolute;inset:0;background:rgba(20,38,65,.36);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.bank-box{position:relative;width:100%;max-width:420px;max-height:88vh;overflow:auto;padding:20px;border-radius:26px;
+  background:rgba(247,250,255,.82);border:1px solid rgba(255,255,255,.88);
+  box-shadow:0 24px 70px rgba(17,35,62,.25),inset 0 1px 0 rgba(255,255,255,.95);
+  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)}
+.bank-box .btn{margin-top:8px}
+.file-inp{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
+.upload-box{position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
+  background:rgba(255,255,255,.26);border-color:rgba(22,116,209,.3)}
+.ord-status{display:inline-flex;padding:5px 9px;border-radius:10px;background:rgba(22,134,90,.12);color:var(--ok);font-size:11px;font-weight:700}
+.ord-meta{font-size:13px;line-height:1.75}
+.m-box,.bank-box{border-top:1px solid rgba(255,255,255,.95);border-left:1px solid rgba(255,255,255,.9)}
+@media(max-width:360px){.pkg-list{gap:8px;padding:0 12px}.pkg-card{min-height:172px;padding-left:10px;padding-right:10px}.category-tabs{margin-left:12px;margin-right:12px}.checkout-btn{padding:12px}.checkout-bar{left:10px;right:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -433,14 +536,6 @@ input::placeholder{color:var(--muted)}
           <span class="home-hdr-icon"><i class="fa-solid fa-gem"></i></span>
           <div><h2>AlmazStoreTJ</h2><p>Free Fire TJ</p></div>
         </div>
-        <div class="hero">
-          <h2 id="heroTitle">Фармоиш диҳед!</h2>
-          <p>Free Fire Diamonds &amp; Vouchers</p>
-          <button class="btn btn-primary btn-pill" id="btnOrderNow" style="width:auto">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span id="btnOrderTxt">Фармоиш диҳед!</span>
-          </button>
-        </div>
         <div class="category-tabs" role="tablist" aria-label="Package categories">
           <button class="category-tab on" data-category="dia" role="tab" aria-selected="true">
             <i class="fa-solid fa-gem"></i><span id="catDia">Алмосҳо</span>
@@ -460,6 +555,16 @@ input::placeholder{color:var(--muted)}
         </div>
         <div id="panel-lvl" class="category-panel" role="tabpanel">
           <div class="pkg-list" id="listLvl"></div>
+        </div>
+        <div class="checkout-bar" id="checkoutBar" aria-live="polite">
+          <div class="checkout-summary">
+            <div class="checkout-items" id="checkoutItems"></div>
+            <div class="checkout-total" id="checkoutTotal"></div>
+          </div>
+          <button class="btn btn-primary checkout-btn" id="checkoutContinue">
+            <span id="checkoutContinueTxt"></span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
         </div>
       </div>
 
@@ -596,31 +701,13 @@ input::placeholder{color:var(--muted)}
       </div>
       <span class="sum-price" id="payPrice">—</span>
     </div>
-    <p class="pay-note" id="payTo">Ба ин рақам маблағ интиқол диҳед:</p>
-    <div class="copy-row">
-      <div>
-        <p class="copy-lbl">Alif Mobi</p>
-        <p class="copy-val">+992 800076063</p>
-      </div>
-      <button class="copy-btn" data-copy="+992 800076063">
-        <i class="fa-solid fa-copy"></i>
-        <span id="cpTxt1">Нусха</span>
-      </button>
+    <p class="pay-note" id="payTo"></p>
+    <div class="pay-actions">
+      <button class="pay-action pay-alif" id="payAlif"><i class="fa-solid fa-wallet"></i><span id="payAlifTxt"></span></button>
+      <button class="pay-action pay-dc" id="payDC"><i class="fa-solid fa-building-columns"></i><span id="payDCTxt"></span></button>
+      <button class="pay-action pay-other" id="payOther"><i class="fa-solid fa-building-columns"></i><span id="payOtherTxt"></span></button>
     </div>
-    <div class="copy-row">
-      <div>
-        <p class="copy-lbl">Alif Visa</p>
-        <p class="copy-val">4444 8888 1471 9187</p>
-      </div>
-      <button class="copy-btn" data-copy="4444 8888 1471 9187">
-        <i class="fa-solid fa-copy"></i>
-        <span id="cpTxt2">Нусха</span>
-      </button>
-    </div>
-    <div class="warn-card">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <span id="payWarn">Маблағро дақиқ фиристед ва скриншотро нигоҳ доред.</span>
-    </div>
+    <div class="pay-reminder"><i class="fa-solid fa-circle-info"></i><span id="payReminder"></span></div>
   </div>
   <div class="sticky-btn">
     <button class="btn btn-primary" id="btnPay">
@@ -640,11 +727,11 @@ input::placeholder{color:var(--muted)}
   <div class="flow-body">
     <span class="step">3 / 3</span>
     <h2 id="titleSS">Скриншотро бор кунед</h2>
-    <div class="upload-box" id="uploadBox">
+    <label class="upload-box" id="uploadBox" for="fileInp">
       <span class="up-icon"><i class="fa-solid fa-camera"></i></span>
       <p id="uploadTxt">Скриншотро интихоб кунед</p>
       <input type="file" class="file-inp" id="fileInp" accept="image/*">
-    </div>
+    </label>
     <div class="preview-wrap hide" id="prevWrap">
       <img id="prevImg" src="" alt="">
       <button class="rm-btn" id="btnRm"><i class="fa-solid fa-xmark"></i></button>
@@ -725,6 +812,22 @@ input::placeholder{color:var(--muted)}
   </div>
 </div>
 
+<div id="bankModal" class="bank-modal hide">
+  <div class="bank-ov" id="bankOv"></div>
+  <div class="bank-box">
+    <div class="m-hdr">
+      <h3 id="bankTitle"></h3>
+      <button class="m-cls" id="bankClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <ol class="bank-steps" id="bankSteps"></ol>
+    <div class="bank-copy">
+      <strong>800076063</strong>
+      <button class="copy-btn" id="bankCopy"><i class="fa-solid fa-copy"></i><span id="bankCopyTxt"></span></button>
+    </div>
+    <button class="btn btn-primary" id="bankDone"></button>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast" class="toast"></div>
 
@@ -773,40 +876,25 @@ async function authenticateTelegram() {
   }
   }
 const PKGS = [
-  {k:'d105',  n:'105 Diamonds', ntj:'105 Алмос', nru:'105 Алмазов', nen:'105 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'9.90смн', c:'dia', hi:false},
-  {k:'d326',  n:'326 Diamonds', ntj:'326 Алмос', nru:'326 Алмазов', nen:'326 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'29.90смн', c:'dia', hi:false},
-  {k:'d546',  n:'546 Diamonds', ntj:'546 Алмос', nru:'546 Алмазов', nen:'546 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'49.90смн', c:'dia', hi:false},
-  {k:'d1113', n:'1113 Diamonds', ntj:'1113 Алмос', nru:'1113 Алмазов', nen:'1113 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'99.90смн', c:'dia', hi:false},
-  {k:'d2398', n:'2398 Diamonds', ntj:'2398 Алмос', nru:'2398 Алмазов', nen:'2398 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'199.90смн', c:'dia', hi:false},
-  {k:'d6100', n:'6100 Diamonds', ntj:'6100 Алмос', nru:'6100 Алмазов', nen:'6100 Diamonds', dtj:'Free Fire', dru:'Free Fire', den:'Free Fire', p:'499.90смн', c:'dia', hi:false},
-  {k:'vlt',
-    ntj:'Лайти Ҳафтагӣ (90)', nru:'Недельный Лайт (90)', nen:'Weekly Lite (90)',
-    dtj:'Фавран 20 алмос, баъдан 10 алмос ҳаррӯз. 1 ҳафта давом мекунад.',
-    dru:'Сразу 20 алмазов, потом 10 алмазов каждый день. Длится 1 неделю.',
-    den:'Instant 20 diamonds, then 10/day. Lasts 1 week.',
-    p:'6 смн', c:'vou', hi:false},
-  {k:'vwk',
-    ntj:'Ваучери Ҳафтагӣ (450)', nru:'Недельный Ваучер (450)', nen:'Weekly Voucher (450)',
-    dtj:'Фавран 100 алмос, баъдан 50 алмос ҳаррӯз. 1 ҳафта давом мекунад.',
-    dru:'Сразу 100 алмазов, потом 50 алмазов каждый день. Длится 1 неделю.',
-    den:'Instant 100 diamonds, then 50/day. Lasts 1 week.',
-    p:'17.90смн', c:'vou', hi:false},
-  {k:'vmo',
-    ntj:'Ваучери Моҳона (2600)', nru:'Месячный Ваучер (2600)', nen:'Monthly Voucher (2600)',
-    dtj:'Фавран 500 алмос, баъдан 70 алмос ҳаррӯз. 1 моҳ давом мекунад.',
-    dru:'Сразу 500 алмазов, потом 70 алмазов каждый день. Длится 1 месяц.',
-    den:'Instant 500 diamonds, then 70/day. Lasts 1 month.',
-    p:'99.90смн', c:'vou', hi:false},
+  {k:'d110',ntj:'110 Алмос',nru:'110 Алмазов',nen:'110 Diamonds',p:8.30,c:'dia'},
+  {k:'d341',ntj:'341 Алмос',nru:'341 Алмаз',nen:'341 Diamonds',p:25.30,c:'dia'},
+  {k:'d572',ntj:'572 Алмос',nru:'572 Алмаза',nen:'572 Diamonds',p:44.30,c:'dia'},
+  {k:'d1166',ntj:'1166 Алмос',nru:'1166 Алмазов',nen:'1166 Diamonds',p:85.30,c:'dia'},
+  {k:'d2398',ntj:'2398 Алмос',nru:'2398 Алмазов',nen:'2398 Diamonds',p:171.30,c:'dia'},
+  {k:'d6160',ntj:'6160 Алмос',nru:'6160 Алмазов',nen:'6160 Diamonds',p:410.30,c:'dia'},
+  {k:'vLite',ntj:'Лайт (Lite)',nru:'Лайт (Lite)',nen:'Lite',p:4.90,c:'vou',voucher:'lite'},
+  {k:'vWeek',ntj:'Ҳафтаина',nru:'Неделя',nen:'Weekly',p:16.00,c:'vou',voucher:'week'},
+  {k:'vMonth',ntj:'Моҳона',nru:'Месячный',nen:'Monthly',p:65.30,c:'vou',voucher:'month'}
 ];
 
 const LVL_PKGS = [
-  {k:'lv6',   n:'Пропуск Прокачки ур. 6 (120)',  p:'6 смн'},
-  {k:'lv10',  n:'Пропуск Прокачки ур. 10 (200)', p:'10 смн'},
-  {k:'lv15',  n:'Пропуск Прокачки ур. 15 (200)', p:'10 смн'},
-  {k:'lv20',  n:'Пропуск Прокачки ур. 20 (200)', p:'10 смн'},
-  {k:'lv25',  n:'Пропуск Прокачки ур. 25 (200)', p:'10 смн'},
-  {k:'lv30',  n:'Пропуск Прокачки ур. 30 (350)', p:'15 смн'},
-  {k:'lvall', n:null, p:'60 смн'},
+  {k:'lv6',ntj:'Ур. 6',nru:'Ур. 6',nen:'Lv. 6',p:5.10},
+  {k:'lv10',ntj:'Ур. 10',nru:'Ур. 10',nen:'Lv. 10',p:8.25},
+  {k:'lv15',ntj:'Ур. 15',nru:'Ур. 15',nen:'Lv. 15',p:8.25},
+  {k:'lv20',ntj:'Ур. 20',nru:'Ур. 20',nen:'Lv. 20',p:8.25},
+  {k:'lv25',ntj:'Ур. 25',nru:'Ур. 25',nen:'Lv. 25',p:8.25},
+  {k:'lv30',ntj:'Ур. 30',nru:'Ур. 30',nen:'Lv. 30',p:10.90},
+  {k:'lvall',ntj:'Ҳамааш',nru:'Все уровни',nen:'All levels',p:49.30}
 ];
 
 const TR = {
@@ -856,7 +944,6 @@ const TR = {
     availYes:'Бале, ҳаст',
     availNo:'Не, нест',
      promoNote:'Фурӯши аккаунтҳои FF бо нархи арзон дар канали мо!',
-     etaMsg:'Ин фармоишро то санаи {date}, соати {time} иҷро карда, алмосҳои шуморо мефиристем. Агар мушкилие пеш ояд, ба мо муроҷиат кунед!',
     faqTitle:'САВОЛҲОИ ЗУД-ЗУД ТАКРОРШАВАНДА',
     howTitle:'ТАРЗИ ИСТИФОДА',
     faqs:[
@@ -921,7 +1008,6 @@ const TR = {
     availYes:'Да, есть',
     availNo:'Нет, нет',
      promoNote:'Продажа аккаунтов FF по низкой цене в нашем канале!',
-     etaMsg:'Мы выполним этот заказ до {date}, в {time}, и отправим ваши алмазы. Если возникнут проблемы — свяжитесь с нами!',
     faqTitle:'ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ',
     howTitle:'КАК ПОЛЬЗОВАТЬСЯ',
     faqs:[
@@ -986,7 +1072,6 @@ const TR = {
     availYes:'Yes, it is',
     availNo:'No, it\'s not',
      promoNote:'FF accounts for sale at low prices in our channel!',
-     etaMsg:'We will complete this order by {date} at {time} and send you your diamonds. If any issues arise, contact us!',
     faqTitle:'FREQUENTLY ASKED QUESTIONS',
     howTitle:'HOW TO USE',
     faqs:[
@@ -1083,16 +1168,6 @@ function dateTimeText(dateStr){
   const ss=String(d.getSeconds()).padStart(2,'0');
   return `${dd}:${mo}:${yyyy} ${hh}:${mm}:${ss}`;
 }
-function etaTime(dateStr){
-  const d=new Date(dateStr);
-  d.setHours(d.getHours()+1);
-  const dd=String(d.getDate()).padStart(2,'0');
-  const mo=String(d.getMonth()+1).padStart(2,'0');
-  const hh=String(d.getHours()).padStart(2,'0');
-  const mm=String(d.getMinutes()).padStart(2,'0');
-  return {date:`${dd}:${mo}`,time:`${hh}:${mm}`};
-}
-
 // ── TELEGRAM ─────────────────────────────────
 async function tgNotify(text){
   const token=TG_BOT_TOKEN;
@@ -1316,22 +1391,6 @@ function renderOrders(){
   });
 }
 
-// ── ORDER DETAIL MODAL ───────────────────────
-function showModal(id){
-  const o=getOrds().find(x=>x.id===id);
-  if(!o) return;
-  const eta=etaTime(o.date);
-  const etaText=t('etaMsg').replace('{date}',eta.date).replace('{time}',eta.time);
-  $('mTitle').textContent=o.id;
-  $('mBody').innerHTML=`
-    <p><b>Паккейҷ:</b> ${o.pkgName}</p>
-    <p><b>Нарх:</b> ${o.price}</p>
-    <p><b>UID:</b> ${o.uid}</p>
-    <p><b>Сана:</b> ${new Date(o.date).toLocaleString()}</p>
-    <p class="ord-eta">${etaText}</p>`;
-  $('modal').classList.remove('hide');
-}
-
 // ── UPDATE UI ────────────────────────────────
 function updateUI(){
   $('tabhome').textContent=t('home');
@@ -1533,7 +1592,7 @@ function init(){
     // Confirm order
   $('btnConfirm').onclick=async()=>{
     if(!ssData){
-      toast('Скриншот бор кунед / Загрузите скриншот / Upload screenshot',3000);
+      toast(tr('uploadMissing'),3000);
       return;
     }
 
@@ -1610,6 +1669,383 @@ function init(){
   $('mCls').onclick=()=>$('modal').classList.add('hide');
 }
 
+// ── MULTI-SELECT CATALOG & LIQUID-GLASS CHECKOUT ─────────
+// Keep the established API/authentication contract; this layer only replaces
+// catalog data, presentation, and the client-side order flow before submission.
+Object.assign(TR.tj,{
+  lvlTab:'Прокачкаи сатҳ',continueCheckout:'Идома',currency:'смн',selected:'интихоб шуд',
+  discount:'−1.50',discountUnit:'/ дона',payAlif:'Пардохт тавассути Alif Mobi',
+  payDC:'Пардохт тавассути Dushanbe City',payOther:'Тавассути бонки дигар',
+  payReminder:'Лутфан маблағро дақиқ {amount} смн фиристода, дар менюи навбатӣ скриншоти чекро бор кунед.',
+  bankTitle:'Пардохт тавассути бонки дигар',
+  bankSteps:['Барномаи бонкии худро кушоед.','Интиқол ба ҳамёнро интихоб кунед.','Бонкро интихоб кунед: Dushanbe City.','Рақами телефонро ворид кунед:','Маблағро дақиқ {amount} смн фиристода, чекро скриншот гиред.'],
+  understood:'Фаҳмо шуд!',copyNumber:'Нусха',statusPending:'Дар интизорӣ',
+  detailPackages:'Бастаҳо',detailTotal:'Ҳамагӣ пардохт шуд',detailUID:'UID бозингар',detailDate:'Сана ва вақт',
+  imageFail:'Ин акс кушода нашуд. Лутфан онро ҳамчун JPEG интихоб кунед ё аз нав гиред.',
+  imageProcessing:'Акс коркард мешавад…',noSelection:'Аввал як бастаро интихоб кунед.',
+  orderId:'ID фармоиш',playerId:'ID бозингар',packageLabel:'Баста',timeLabel:'Вақт',
+  authRequired:'Telegram тасдиқ нашуд. Мағозаро аз бот кушоед.',
+  serverError:'Хатои сервер:',connectionError:'Пайвастшавӣ ба сервер қатъ шуд. Фармоиш сабт нашуд.',
+  uidShort:'UID',uploadMissing:'Скриншотро бор кунед.',
+  categoryLabel:'Категорияҳои бастаҳо',close:'Пӯшидан',selectPackage:'Интихоби баста',quantity:'Миқдор'
+});
+Object.assign(TR.ru,{
+  lvlTab:'Пропуск прокачки',continueCheckout:'Продолжить',currency:'смн',selected:'выбрано',
+  discount:'−1.50',discountUnit:'/ шт.',payAlif:'Оплатить через Alif Mobi',
+  payDC:'Оплатить через Dushanbe City',payOther:'Через другой банк',
+  payReminder:'Переведите точную сумму {amount} смн, а на следующем шаге загрузите скриншот чека.',
+  bankTitle:'Оплата через другой банк',
+  bankSteps:['Откройте приложение своего банка.','Выберите перевод на кошелёк.','Выберите банк: Dushanbe City.','Введите номер телефона:','Переведите ровно {amount} смн и сделайте скриншот чека.'],
+  understood:'Понятно!',copyNumber:'Копировать',statusPending:'В ожидании',
+  detailPackages:'Пакеты',detailTotal:'Оплачено всего',detailUID:'UID игрока',detailDate:'Дата и время',
+  imageFail:'Не удалось открыть это изображение. Выберите JPEG или сделайте снимок ещё раз.',
+  imageProcessing:'Обработка изображения…',noSelection:'Сначала выберите пакет.',
+  orderId:'Номер заказа',playerId:'UID игрока',packageLabel:'Пакет',timeLabel:'Время',
+  authRequired:'Telegram не подтверждён. Откройте магазин через бота.',
+  serverError:'Ошибка сервера:',connectionError:'Соединение с сервером потеряно. Заказ не отправлен.',
+  uidShort:'UID',uploadMissing:'Загрузите скриншот.',
+  categoryLabel:'Категории пакетов',close:'Закрыть',selectPackage:'Выбрать пакет',quantity:'Количество'
+});
+Object.assign(TR.en,{
+  lvlTab:'Level Up Pass',continueCheckout:'Continue',currency:'TJS',selected:'selected',
+  discount:'−1.50',discountUnit:'/ unit',payAlif:'Pay via Alif Mobi',
+  payDC:'Pay via Dushanbe City',payOther:'Pay via another bank',
+  payReminder:'Send exactly {amount} TJS, then upload a screenshot of the receipt on the next screen.',
+  bankTitle:'Pay via another bank',
+  bankSteps:['Open your banking app.','Choose transfer to wallet.','Choose bank: Dushanbe City.','Enter the phone number:','Send exactly {amount} TJS and take a screenshot of the receipt.'],
+  understood:'Got it!',copyNumber:'Copy',statusPending:'Pending',
+  detailPackages:'Packages',detailTotal:'Total paid',detailUID:'Player UID',detailDate:'Date and time',
+  imageFail:'This image could not be opened. Choose a JPEG or take the photo again.',
+  imageProcessing:'Processing image…',noSelection:'Select at least one package first.',
+  orderId:'Order ID',playerId:'Player ID',packageLabel:'Package',timeLabel:'Time',
+  authRequired:'Telegram could not be verified. Open the store through the bot.',
+  serverError:'Server error:',connectionError:'Connection lost. The order was not submitted.',
+  uidShort:'UID',uploadMissing:'Upload a screenshot.',
+  categoryLabel:'Package categories',close:'Close',selectPackage:'Select package',quantity:'Quantity'
+});
+TR.tj.faqs[2].a='Alif Mobi, Dushanbe City ё интиқол аз бонки дигар.';
+TR.ru.faqs[2].a='Alif Mobi, Dushanbe City или перевод из другого банка.';
+TR.en.faqs[2].a='Alif Mobi, Dushanbe City, or a transfer from another bank.';
+TR.tj.howSteps[3]='Аз Alif Mobi, Dushanbe City ё бонки дигар маблағро дақиқ интиқол диҳед.';
+TR.ru.howSteps[3]='Переведите точную сумму через Alif Mobi, Dushanbe City или другой банк.';
+TR.en.howSteps[3]='Transfer the exact amount via Alif Mobi, Dushanbe City, or another bank.';
+const selectedPackages=new Map();
+let processingImage=false;
+let previewObjectUrl=null;
+function tr(key){return TR[lang]?.[key]??key;}
+function fmtMoney(value){return (Math.round((Number(value)||0)*100)/100).toFixed(2);}
+function currencyLabel(){return tr('currency');}
+function packagePrice(pkg,qty){
+  return pkg.k==='vWeek'&&qty>=2?14.50:Number(pkg.p);
+}
+function selectedTotalCents(){
+  let cents=0;
+  selectedPackages.forEach((qty,key)=>{
+    const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
+    if(p)cents+=Math.round(packagePrice(p,qty)*100)*qty;
+  });
+  return cents;
+}
+function selectedTotal(){return selectedTotalCents()/100;}
+function pkgName(p){
+  if(lang==='ru')return p.nru||p.ntj||p.n;
+  if(lang==='en')return p.nen||p.ntj||p.n;
+  return p.ntj||p.n;
+}
+function lvlPkgDisplayName(p){return pkgName(p);}
+function safeText(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function togglePackage(key){
+  if(selectedPackages.has(key))selectedPackages.delete(key);
+  else selectedPackages.set(key,1);
+  renderHome();
+}
+function packageCard(p,isLevel=false){
+  const qty=selectedPackages.get(p.k)||0;
+  const chosen=qty>0;
+  const name=safeText(pkgName(p));
+  const isVoucher=p.c==='vou';
+  const unit=packagePrice(p,qty||1);
+  const icon=isLevel?'<i class="fa-solid fa-medal"></i>':isVoucher?'<i class="fa-solid fa-ticket"></i>':'<i class="fa-solid fa-gem"></i>';
+  const badge=isVoucher&&p.k==='vWeek'&&qty>=2
+    ?`<span class="discount-badge">${safeText(tr('discount'))} −1.50${safeText(tr('discountUnit'))}</span>`:'';
+  const klass=`pkg-card${chosen?' hi':''}${isVoucher?` vou-card voucher-${p.voucher}`:''}`;
+  return `<div class="${klass}" data-k="${safeText(p.k)}">
+    <div class="pkg-top"><span class="pkg-icon">${icon}</span>${badge}<button type="button" class="pkg-check" aria-label="${safeText(pkgName(p))}: ${safeText(chosen?tr('selected'):tr('selectPackage'))}" aria-pressed="${chosen}">${chosen?'✅':''}</button></div>
+    <div class="pkg-info"><p class="pkg-name">${name}</p><p class="pkg-price">${fmtMoney(unit)} ${safeText(currencyLabel())}</p></div>
+    <div class="pkg-bottom">${chosen?`<div class="qty-stepper" aria-label="${safeText(pkgName(p))}: ${safeText(tr('quantity'))}"><button type="button" data-step="-1" aria-label="−">−</button><span>${qty}</span><button type="button" data-step="1" aria-label="+">+</button></div>`:'<span aria-hidden="true"></span>'}</div>
+  </div>`;
+}
+function renderPackageList(containerId,list,isLevel=false){
+  const c=$(containerId);
+  c.innerHTML=list.map(p=>packageCard(p,isLevel)).join('');
+  c.querySelectorAll('.pkg-card').forEach(card=>{
+    const key=card.dataset.k;
+    card.onclick=e=>{
+      const step=e.target.closest('[data-step]');
+      if(step){
+        e.stopPropagation();
+        const next=(selectedPackages.get(key)||1)+Number(step.dataset.step);
+        if(next<1)selectedPackages.delete(key);
+        else selectedPackages.set(key,next);
+        renderHome();
+        return;
+      }
+      togglePackage(key);
+    };
+  });
+}
+function renderPkgs(containerId,filter){
+  renderPackageList(containerId,filter?PKGS.filter(p=>p.c===filter):PKGS);
+}
+function renderLvlPkgs(containerId){renderPackageList(containerId,LVL_PKGS,true);}
+function shortPackageName(p){
+  const name=p.k.startsWith('d')?`${p.k.slice(1)}💎`:pkgName(p);
+  return `${safeText(name)} ${selectedPackages.get(p.k)}×`;
+}
+function updateCheckout(){
+  const bar=$('checkoutBar');
+  if(!bar)return;
+  const selected=[];
+  selectedPackages.forEach((qty,key)=>{
+    const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
+    if(p)selected.push(shortPackageName(p));
+  });
+  bar.classList.toggle('on',selected.length>0);
+  $('checkoutItems').textContent=selected.join(', ');
+  $('checkoutTotal').textContent=`${fmtMoney(selectedTotal())} ${currencyLabel()}`;
+  $('checkoutContinueTxt').textContent=tr('continueCheckout');
+}
+function renderHome(){
+  renderPkgs('listDia','dia');renderPkgs('listVou','vou');renderLvlPkgs('listLvl');
+  $('catDia').textContent=tr('dia');$('catVou').textContent=tr('vou');$('catLvl').textContent=tr('lvlTab');
+  showCategory(activeCategory);updateCheckout();
+}
+function showModal(id){
+  const o=getOrds().find(x=>x.id===id);if(!o)return;
+  const date=new Date(o.date);
+  const status=o.status==='pending'?tr('statusPending'):safeText(o.status||tr('statusPending'));
+  $('mTitle').textContent=o.id;
+  $('mBody').innerHTML=`<div class="ord-meta">
+    <p><span class="ord-status">${status}</span></p>
+    <p><b>${safeText(tr('detailDate'))}:</b> ${safeText(date.toLocaleString(lang==='tj'?'tg-TJ':lang==='ru'?'ru-RU':'en-US'))}</p>
+    <p><b>${safeText(tr('detailUID'))}:</b> ${safeText(o.uid)}</p>
+    <p><b>${safeText(tr('detailPackages'))}:</b> ${safeText(o.pkgName)}</p>
+    <p><b>${safeText(tr('detailTotal'))}:</b> ${safeText(o.price)}</p>
+  </div>`;
+  $('modal').classList.remove('hide');
+}
+function renderOrders(){
+  const ords=getOrds(),c=$('ordList');
+  if(!ords.length){c.innerHTML='';$('ordEmpty').classList.remove('hide');return;}
+  $('ordEmpty').classList.add('hide');
+  c.innerHTML=ords.map(o=>`<div class="ord-card" data-id="${safeText(o.id)}">
+    <div class="ord-top"><span class="ord-id">${safeText(o.id)}</span><span class="ord-status">${o.status==='pending'?safeText(tr('statusPending')):safeText(o.status||tr('statusPending'))}</span></div>
+    <div class="ord-det">${safeText(o.pkgName)} — ${safeText(o.price)}<br>${safeText(tr('uidShort'))}: ${safeText(o.uid)}</div>
+  </div>`).join('');
+  c.querySelectorAll('.ord-card').forEach(card=>card.onclick=()=>showModal(card.dataset.id));
+}
+function updateUI(){
+  const text=(id,key)=>{if($(id))$(id).textContent=tr(key);};
+  text('tabhome','home');text('taborders','orders');text('tabsupport','support');text('tabsettings','settings');
+  text('catDia','dia');text('catVou','vou');text('catLvl','lvlTab');
+  document.querySelector('.category-tabs').setAttribute('aria-label',tr('categoryLabel'));
+  $('bankClose').setAttribute('aria-label',tr('close'));
+  text('titleOrds','orders');text('emptyTxt','empty');text('titleSup','support');text('supDesc','supDesc');
+  text('btnTgTxt','writeTg');text('btnWATxt','whatsapp');text('btnReviewsTxt','reviews');
+  text('titleSet','settings');text('setLangLbl','setLang');text('rowLangLbl','chLang');
+  ['tj','ru','en'].forEach(l=>{const el=$('ck-'+l);if(el)el.innerHTML=l===lang?'<i class="fa-solid fa-check"></i>':'';});
+  $('curLang').textContent={tj:'Тоҷикӣ',ru:'Русский',en:'English'}[lang];
+  $$('#langDD .lang-opt').forEach(o=>o.classList.toggle('on',o.dataset.l===lang));
+  text('titleUID','enterUID');text('btnUIDTxt','next');text('titlePay','payDet');
+  text('payTo','payTo');text('btnPayTxt','next');text('titleSS','upSS');text('uploadTxt','selSS');
+  text('btnConfirmTxt','confirm');text('confTitle','sent');text('confSub','sentSub');text('btnDoneTxt','done');
+  text('payAlifTxt','payAlif');text('payDCTxt','payDC');text('payOtherTxt','payOther');
+  $('payReminder').textContent=tr('payReminder').replace('{amount}',fmtMoney(selectedTotal()));
+  text('bankTitle','bankTitle');text('bankCopyTxt','copyNumber');text('bankDone','understood');
+  $('bankSteps').innerHTML=tr('bankSteps').map((step,i)=>`<li>${safeText(step.replace('{amount}',fmtMoney(selectedTotal())))}</li>`).join('');
+  $('checkoutContinueTxt').textContent=tr('continueCheckout');
+  renderFAQ();renderOrders();renderHome();
+}
+function openPaymentLink(url){
+  try{
+    if(tgApp&&typeof tgApp.openLink==='function'){tgApp.openLink(url);return;}
+  }catch(e){console.warn('Telegram link open failed; using browser fallback.',e);}
+  window.open(url,'_blank','noopener,noreferrer');
+}
+async function copyValue(value,button,copyKey='copyNumber'){
+  let ok=false;
+  try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);ok=true;}}catch(e){}
+  if(!ok){
+    const ta=document.createElement('textarea');ta.value=value;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{ok=document.execCommand('copy');}catch(e){ok=false;}
+    ta.remove();
+  }
+  if(ok){toast(tr('copied'));if(button){button.classList.add('done');button.querySelector('span').textContent=tr('copied');}}
+  else toast(tr('copyNumber'));
+}
+function showBankModal(){
+  updateUI();$('bankModal').classList.remove('hide');
+}
+function hideBankModal(){$('bankModal').classList.add('hide');}
+function showWarnModal(){
+  $('warnTitle').textContent=tr('warnTitle');$('warnMsg').innerHTML=tr('warnMsg');
+  $('warnOkTxt').textContent=tr('warnOk');$('warnCancelTxt').textContent=tr('warnCancel');
+  $('warnModal').classList.remove('hide');
+}
+function init(){
+  showScr('scr-main');showTab('home');renderHome();updateUI();
+  $$('.tab-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  $$('.category-tab').forEach(b=>b.onclick=()=>showCategory(b.dataset.category));
+  $('checkoutContinue').onclick=()=>{
+    if(!selectedPackages.size){toast(tr('noSelection'));return;}
+    const pieces=[];
+    selectedPackages.forEach((qty,key)=>{
+      const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
+      if(p)pieces.push(`${pkgName(p)} × ${qty}`);
+    });
+    const ids=Array.from(selectedPackages.keys());
+    curOrder.pkg=ids.join(',');
+    curOrder.pkgName=pieces.join(', ');
+    curOrder.price=`${fmtMoney(selectedTotal())} ${currencyLabel()}`;
+    $('payPkg').textContent=curOrder.pkgName;$('payPrice').textContent=curOrder.price;
+    showWarnModal();
+  };
+  $('btnTg').onclick=()=>window.open(`https://t.me/${TG_ADMIN}`,'_blank','noopener,noreferrer');
+  $('btnWA').onclick=()=>window.open(WA_LINK,'_blank','noopener,noreferrer');
+  $('btnReviews').onclick=()=>window.open(REVIEWS_LINK,'_blank','noopener,noreferrer');
+  $('rowLang').onclick=()=>$('langDD').classList.toggle('hide');
+  $$('#langDD .lang-opt').forEach(opt=>opt.onclick=()=>{
+    lang=opt.dataset.l;setStored('almaz_lang',lang);$('langDD').classList.add('hide');updateUI();
+  });
+  $$('[data-back]').forEach(btn=>btn.onclick=()=>{
+    const target=btn.dataset.back;
+    if(target==='main'){showScr('scr-main');showTab('home');}
+    else if(target==='uid')showScr('scr-uid');
+    else if(target==='pay')showScr('scr-pay');
+  });
+  $('warnOv').onclick=()=>{hideWarnModal();};
+  $('warnOk').onclick=()=>{hideWarnModal();showScr('scr-uid');};
+  $('warnCancel').onclick=()=>hideWarnModal();
+  $('btnUID').onclick=()=>{
+    const uid=$('inUID').value.trim();
+    if(!uid){$('errUID').textContent=tr('uidReq');$('errUID').classList.remove('hide');$('rowUID').classList.add('err');return;}
+    if(!/^\d{5,12}$/.test(uid)){$('errUID').textContent=tr('uidBad');$('errUID').classList.remove('hide');$('rowUID').classList.add('err');return;}
+    $('errUID').classList.add('hide');$('rowUID').classList.remove('err');curOrder.uid=uid;showScr('scr-pay');
+  };
+  $('payAlif').onclick=()=>openPaymentLink(`https://alifmobi.page.link/providers?id=124&amount=${fmtMoney(selectedTotal())}&account=800076063`);
+  $('payDC').onclick=()=>openPaymentLink(`http://pay.dc.tj/?a=9762000239098071&s=${fmtMoney(selectedTotal())}&c=&f1=133`);
+  $('payOther').onclick=showBankModal;
+  $('bankOv').onclick=hideBankModal;$('bankClose').onclick=hideBankModal;$('bankDone').onclick=hideBankModal;
+  $('bankCopy').onclick=()=>copyValue('800076063',$('bankCopy'));
+  $('btnPay').onclick=()=>showScr('scr-ss');
+  $('fileInp').onchange=async e=>{
+    const file=e.target.files?.[0];if(!file)return;
+    if(previewObjectUrl)URL.revokeObjectURL(previewObjectUrl);
+    previewObjectUrl=URL.createObjectURL(file);
+    $('prevImg').src=previewObjectUrl;$('uploadBox').classList.add('hide');$('prevWrap').classList.remove('hide');
+    ssData=null;processingImage=true;toast(tr('imageProcessing'),1800);
+    try{
+      ssData=await compressImageToJpeg(file,previewObjectUrl);
+      $('prevImg').src=ssData;
+      if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}
+    }catch(error){
+      console.error('Screenshot image conversion failed:',error);toast(tr('imageFail'),4000);
+    }finally{processingImage=false;}
+  };
+  $('btnRm').onclick=()=>{
+    ssData=null;$('prevImg').src='';$('fileInp').value='';
+    if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}
+    $('uploadBox').classList.remove('hide');$('prevWrap').classList.add('hide');
+  };
+  $('btnConfirm').onclick=async()=>{
+    if(processingImage){toast(tr('imageProcessing'));return;}
+    if(!ssData){toast(tr('uploadMissing'),3000);return;}
+    const confirmBtn=$('btnConfirm');if(confirmBtn.disabled)return;confirmBtn.disabled=true;
+    const orderDate=new Date();
+    const order={id:nextId(orderDate),uid:curOrder.uid,pkg:curOrder.pkg,pkgName:curOrder.pkgName,
+      price:curOrder.price,status:'pending',date:orderDate.toISOString()};
+    try{
+      if(!tgApp||!tgApp.initData){toast(tr('authRequired'),4000);return;}
+      const response=await fetch(`${ASTJ_API}/orders`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({initData:tgApp.initData,order:order,screenshot:ssData})
+      });
+      const result=await response.json();
+      if(!response.ok||!result.success){
+        console.error('Order API error:',result);
+        toast(tr('serverError')+' '+(result.error||result.message||JSON.stringify(result)),6000);return;
+      }
+      try{saveOrd(order);}catch(e){console.error('Local order save failed:',e);}
+      $('confBox').innerHTML=`<b>${safeText(tr('orderId'))}:</b> ${safeText(order.id)}<br><b>${safeText(tr('playerId'))}:</b> ${safeText(order.uid)}<br><b>${safeText(tr('packageLabel'))}:</b> ${safeText(order.pkgName)} — ${safeText(order.price)}<br><b>${safeText(tr('timeLabel'))}:</b> ${safeText(dateTimeText(order.date))}`;
+      $('scr-conf').querySelector('.conf-wrap').classList.remove('success');showScr('scr-conf');
+      requestAnimationFrame(()=>requestAnimationFrame(()=>$('scr-conf').querySelector('.conf-wrap').classList.add('success')));
+      renderHome();
+    }catch(error){console.error('Order submission failed:',error);toast(tr('connectionError'),4000);}
+    finally{confirmBtn.disabled=false;}
+  };
+  $('btnDone').onclick=()=>{
+    curOrder={};ssData=null;selectedPackages.clear();$('inUID').value='';$('fileInp').value='';
+    if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}
+    $('uploadBox').classList.remove('hide');$('prevWrap').classList.add('hide');
+    $('scr-conf').querySelector('.conf-wrap').classList.remove('success');renderHome();
+    showScr('scr-main');showTab('home');
+  };
+  $('mOv').onclick=()=>$('modal').classList.add('hide');$('mCls').onclick=()=>$('modal').classList.add('hide');
+  $('lvlClose').onclick=()=>hideLvlPopup();$('lvlOv').onclick=()=>hideLvlPopup();
+  $('availYes').onclick=()=>hideAvailModal();$('availNo').onclick=()=>hideAvailModal();
+}
+function compressImageToJpeg(file,objectUrl){
+  const canvasToJpeg=(canvas)=>{
+    const data=canvas.toDataURL('image/jpeg',.82);
+    if(!data.startsWith('data:image/jpeg;base64,'))throw new Error('JPEG conversion failed');
+    return data;
+  };
+  const drawBitmap=()=>{
+    if(typeof createImageBitmap!=='function')return Promise.reject(new Error('ImageBitmap unavailable'));
+    return createImageBitmap(file).then(bitmap=>{
+      try{
+        const scale=Math.min(1,1280/bitmap.width);
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+        canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+        const ctx=canvas.getContext('2d',{alpha:false});
+        if(!ctx)throw new Error('Canvas context unavailable');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+        return canvasToJpeg(canvas);
+      }finally{bitmap.close?.();}
+    });
+  };
+  const draw=src=>new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const scale=Math.min(1,1280/img.naturalWidth);
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+        const ctx=canvas.getContext('2d',{alpha:false});
+        if(!ctx)throw new Error('Canvas context unavailable');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvasToJpeg(canvas));
+      }catch(err){reject(err);}
+    };
+    img.onerror=()=>reject(new Error('Image decode failed'));
+    img.src=src;
+  });
+  return draw(objectUrl).catch(()=>new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('File read failed'));
+    reader.onload=()=>draw(String(reader.result||'')).then(resolve,reject);
+    reader.readAsDataURL(file);
+  })).catch(()=>drawBitmap());
+}
+
 async function boot(){
   const app=$('app');
   const splash=$('splash');
@@ -1630,16 +2066,13 @@ if(!user){
   }
 
     init();
+    app.classList.add('ready');
 
   }catch(error){
     console.error('AlmazStore startup error:',error);
-    showScr('scr-main');
+    init();
+    app.classList.add('ready');
   }
-
-  setTimeout(()=>{
-    splash.classList.add('done');
-    setTimeout(()=>app.classList.add('ready'),450);
-  },4000);
 }
 
 if(document.readyState==='loading'){
