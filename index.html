@@ -428,10 +428,40 @@ input::placeholder{color:var(--muted)}
 }
 html,body{overflow:hidden}
 #scr-home{padding-bottom:0}
-#scr-home .tabs{height:100dvh;height:100vh}
-#scr-home .tab-pages{overflow:visible}
-#scr-home .tab-bar{display:none!important}
-#tp-home{position:relative!important;inset:auto!important;height:100%;overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:none!important}
+
+#scr-home .tabs{
+  height:100dvh;
+  height:100vh;
+  min-height:0;
+}
+
+#scr-home .tab-pages{
+  min-height:0;
+  overflow:hidden;
+  flex:1 1 auto;
+}
+
+#scr-home .tab-bar{
+  display:none!important;
+}
+
+#tp-home{
+  position:relative!important;
+  inset:auto!important;
+  height:100%;
+  min-height:0;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  touch-action:pan-y;
+  padding-bottom:230px!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  transform:none!important;
+}
+  
 #scr-home:not(.on) #tp-home,#scr-home:not(.on) #tp-home *{visibility:hidden!important;pointer-events:none!important}
 #tp-home{overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important}
 #tp-home .category-panel{max-height:none!important;overflow:visible;padding-bottom:8px;visibility:visible}
