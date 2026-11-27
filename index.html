@@ -427,10 +427,11 @@ input::placeholder{color:var(--muted)}
   --border:rgba(255,255,255,.76);--glass-shadow:0 18px 42px rgba(31,55,88,.15),inset 0 1px 0 rgba(255,255,255,.9);
 }
 html,body{overflow:hidden}
-#app{visibility:visible;opacity:1;transition:none}
-.splash{display:none!important}
-#scr-main .tabs{height:100dvh;height:100vh}
-#scr-main .tab-pages{overflow:visible}
+#scr-home{padding-bottom:0}
+#scr-home .tabs{height:100dvh;height:100vh}
+#scr-home .tab-pages{overflow:visible}
+#scr-home .tab-bar{display:none!important}
+#tp-home{position:relative!important;inset:auto!important;height:100%;overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:none!important}
 #tp-home{overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important}
 #tp-home .category-panel{max-height:none!important;overflow:visible;padding-bottom:8px;visibility:visible}
 #tp-home .category-panel:not(.on){display:none}
@@ -489,14 +490,15 @@ html,body{overflow:hidden}
 .vou-card.voucher-lite .pkg-icon{color:#26A8FF;filter:drop-shadow(0 0 8px rgba(38,168,255,.6))}
 .vou-card.voucher-week .pkg-icon{color:#9958ED;filter:drop-shadow(0 0 8px rgba(153,88,237,.65))}
 .vou-card.voucher-month .pkg-icon{color:#D9A31D;filter:drop-shadow(0 0 8px rgba(217,163,29,.62))}
-.checkout-bar{position:fixed;z-index:95;left:14px;right:14px;bottom:calc(74px + env(safe-area-inset-bottom));
+.checkout-bar{position:fixed;z-index:95;left:14px;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));
   display:flex;align-items:center;gap:12px;padding:12px;border-radius:22px;
   background:rgba(246,250,255,.7);border:1px solid rgba(255,255,255,.88);
   box-shadow:0 16px 42px rgba(31,55,88,.2),inset 0 1px 0 rgba(255,255,255,.96);
   backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);
-  opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;
+  opacity:.45;transform:translateY(0) scale(1);pointer-events:none;
   transition:opacity .3s ease,transform .42s cubic-bezier(.2,.8,.2,1)}
-.checkout-bar.on{opacity:1;transform:translateY(-8px) scale(1);pointer-events:auto}
+.checkout-bar.on{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.checkout-btn:disabled{opacity:.68;filter:saturate(.55);cursor:not-allowed}
 .checkout-summary{flex:1;min-width:0}
 .checkout-items{font-size:11px;font-weight:600;line-height:1.35;max-height:30px;overflow:hidden;color:var(--fg)}
 .checkout-total{margin-top:3px;font-size:14px;font-weight:800;color:var(--primary)}
@@ -540,6 +542,56 @@ html,body{overflow:hidden}
   background:rgba(255,255,255,.26);border-color:rgba(22,116,209,.3)}
 .ord-meta{font-size:13px;line-height:1.75}
 .m-box,.bank-box{border-top:1px solid rgba(255,255,255,.95);border-left:1px solid rgba(255,255,255,.9)}
+.hub-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+  padding:calc(28px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom));
+  overflow-y:auto!important;background:
+    radial-gradient(circle at 12% 8%,rgba(120,195,255,.45),transparent 30%),
+    radial-gradient(circle at 92% 18%,rgba(204,225,255,.65),transparent 34%),
+    linear-gradient(160deg,#E9F5FF 0%,#D9EDFF 48%,#EAF4FF 100%)}
+.hub-screen.on{animation:hubEnter .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes hubEnter{from{opacity:0;transform:translate3d(0,24px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+.hub-head{text-align:center;margin-bottom:4px}
+.hub-logo{width:72px;height:72px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:31px;border-radius:25px;background:linear-gradient(145deg,#54B5FF,#1465C5);
+  box-shadow:0 14px 32px rgba(22,116,209,.3),inset 0 1px 0 rgba(255,255,255,.72)}
+.hub-head h1{font-size:26px;font-weight:850;letter-spacing:.2px;color:#145DA9;
+  text-shadow:0 1px 0 #fff,0 5px 16px rgba(22,116,209,.16)}
+.hub-head p{margin-top:5px;color:#537491;font-size:12px;letter-spacing:.7px}
+.hub-stack{width:min(100%,420px);display:grid;gap:12px}
+.hub-action{position:relative;overflow:hidden;min-height:60px;padding:15px 17px;display:flex;align-items:center;gap:14px;
+  border-radius:19px;border:1px solid rgba(255,255,255,.88);font-size:15px;font-weight:750;text-align:left;cursor:pointer;
+  transition:transform .2s,filter .2s;backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%)}
+.hub-action:active{transform:scale(.98)}
+.hub-action::before{content:"";position:absolute;inset:0 0 auto;height:55%;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.3),transparent)}
+.hub-action>*{position:relative;z-index:1}
+.hub-action.primary{color:#fff;background:linear-gradient(135deg,#3E9BFA,#1D63C7);
+  box-shadow:0 12px 29px rgba(39,115,210,.27),inset 0 1px 0 rgba(255,255,255,.6),inset 0 -2px 0 rgba(5,59,121,.2)}
+.hub-action.neutral{color:var(--fg);background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(222,235,250,.48));
+  box-shadow:0 11px 26px rgba(38,65,98,.13),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(90,121,157,.08)}
+.hub-action-icon{width:24px;text-align:center;font-size:19px;flex-shrink:0}
+.hub-action-label{flex:1}
+.hub-action-arrow{font-size:13px;opacity:.78}
+.screen-back{position:sticky;top:max(10px,env(safe-area-inset-top));z-index:80;
+  display:flex;align-items:center;gap:8px;width:max-content;margin:10px 14px 8px;padding:10px 15px;
+  color:var(--fg);font-size:14px;font-weight:700;border:1px solid rgba(255,255,255,.9);border-radius:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(222,235,250,.48));
+  box-shadow:0 8px 20px rgba(38,65,98,.13),inset 0 1px 0 #fff;
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);cursor:pointer}
+.about-modal{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:22px}
+.about-modal.hide{display:none}
+.about-ov{position:absolute;inset:0;background:rgba(20,38,65,.36);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.about-box{position:relative;width:100%;max-width:420px;max-height:84vh;overflow:auto;padding:24px;border-radius:26px;
+  background:rgba(247,250,255,.86);border:1px solid rgba(255,255,255,.92);
+  box-shadow:0 24px 70px rgba(17,35,62,.25),inset 0 1px 0 rgba(255,255,255,.98);
+  backdrop-filter:blur(30px) saturate(185%);-webkit-backdrop-filter:blur(30px) saturate(185%)}
+.about-mark{width:54px;height:54px;border-radius:19px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:23px;background:linear-gradient(145deg,#54B5FF,#1465C5);box-shadow:0 10px 24px rgba(22,116,209,.25)}
+.about-box h3{text-align:center;font-size:20px;margin-bottom:14px;color:#145DA9}
+.about-copy{font-size:14px;line-height:1.7;color:var(--fg)}
+.about-copy p{margin-bottom:10px}
+.about-copy strong{color:var(--primary)}
+.about-box .btn{margin-top:12px}
 @media(max-width:360px){.pkg-list{gap:12px;padding:0 12px}.pkg-card{height:122px;min-height:122px;padding:35px 10px 3px}.category-tabs{margin-left:12px;margin-right:12px}.checkout-btn{padding:12px}.checkout-bar{left:14px;right:14px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -1162,18 +1214,20 @@ function toast(msg, dur=2500){
   el._t=setTimeout(()=>el.classList.remove('show'),dur);
 }
 function showScr(id){
+  if(id==='scr-main')id='scr-home';
   $$('.scr').forEach(s=>s.classList.remove('on'));
-  $(id).classList.add('on');
-  $(id).scrollTop=0;
+  const target=$(id);
+  if(!target)return;
+  target.classList.add('on');
+  target.scrollTop=0;
+  if(id==='scr-home')activeTab='home';
+  else if(id==='scr-orders'){activeTab='orders';renderOrders();}
+  else if(id==='scr-settings')activeTab='settings';
+  updateCheckout();
 }
 function showTab(name){
   activeTab=name;
-  $$('.tab-page').forEach(p=>p.classList.remove('on'));
-  $('tp-'+name).classList.add('on');
-  $$('.tab-btn').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
-  if(name==='orders') renderOrders();
-  if(name==='settings'){ updateUI(); renderFAQ(); }
-  updateCheckout();
+  showScr(name==='home'?'scr-home':`scr-${name}`);
 }
 
 // ── STORAGE ──────────────────────────────────
@@ -1709,6 +1763,13 @@ function init(){
 // Keep the established API/authentication contract; this layer only replaces
 // catalog data, presentation, and the client-side order flow before submission.
 Object.assign(TR.tj,{
+  hubShop:'Оғози харид',hubOrders:'Фармоишҳо',hubSupport:'Пуштибонӣ',hubSettings:'Танзимот',hubAbout:'Дар бораи мо',
+  hubSub:'Хизматрасонии алмосҳои Free Fire дар Тоҷикистон',back:'← Бозгашт',
+  aboutTitle:'Дар бораи AlmazStoreTJ',
+  aboutP1:'AlmazStoreTJ (ASTJ) — яке аз хизматрасониҳои боэътимоди пур кардани алмосҳои Free Fire дар Тоҷикистон аст. Мо зиёда аз 1 сол фаъолият мекунем ва ҳазорҳо фармоишро анҷом додаем.',
+  aboutP2:'Алмосҳо фавран тавассути Player UID ба аккаунти шумо фиристода мешаванд. Барои ҳар пардохт расиди расмии рақамӣ пешниҳод мекунем — нархҳо шаффофанд ва ҷараён равшан аст.',
+  aboutP3:'Баррасиҳои тасдиқшудаи муштариёнро дар @otz_behruz бинед.',
+  aboutOk:'Хеле хуб!',
   lvlTab:'Прокачкаи сатҳ',continueCheckout:'Идома',currency:'смн',selected:'интихоб шуд',
   levelWarning:'⚠️ Ҳар бастаи пропуск прокачки дар як аккаунт ТАНҲО якбор харида мешавад. Агар бастаи интихобшуда аллакай дар аккаунти шумо харида шуда бошад, на вақти худро гиред, на аз моро!',
   discount:'−1.50',discountUnit:'/ дона',payAlif:'Пардохт тавассути Alif Mobi',
@@ -1727,6 +1788,13 @@ Object.assign(TR.tj,{
   categoryLabel:'Категорияҳои бастаҳо',close:'Пӯшидан',selectPackage:'Интихоби баста',quantity:'Миқдор'
 });
 Object.assign(TR.ru,{
+  hubShop:'Начать покупки',hubOrders:'Заказы',hubSupport:'Поддержка',hubSettings:'Настройки',hubAbout:'О нас',
+  hubSub:'Сервис алмазов Free Fire в Таджикистане',back:'← Назад',
+  aboutTitle:'Об AlmazStoreTJ',
+  aboutP1:'AlmazStoreTJ (ASTJ) — один из надёжных сервисов пополнения алмазов Free Fire в Таджикистане. Мы работаем более 1 года и выполнили тысячи заказов.',
+  aboutP2:'Алмазы доставляются мгновенно по Player UID. Для каждого платежа предоставляется официальный цифровой чек — прозрачные цены и понятный процесс.',
+  aboutP3:'Проверенные отзывы клиентов смотрите в @otz_behruz.',
+  aboutOk:'Отлично!',
   lvlTab:'Пропуск прокачки',continueCheckout:'Продолжить',currency:'смн',selected:'выбрано',
   levelWarning:'⚠️ Каждый набор пропуска прокачки покупается на один аккаунт ТОЛЬКО один раз. Если выбранный набор уже куплен на вашем аккаунте, не тратьте ни своё, ни наше время!',
   discount:'−1.50',discountUnit:'/ шт.',payAlif:'Оплатить через Alif Mobi',
@@ -1745,6 +1813,13 @@ Object.assign(TR.ru,{
   categoryLabel:'Категории пакетов',close:'Закрыть',selectPackage:'Выбрать пакет',quantity:'Количество'
 });
 Object.assign(TR.en,{
+  hubShop:'Start Shopping',hubOrders:'Orders',hubSupport:'Support',hubSettings:'Settings',hubAbout:'About Us',
+  hubSub:'Free Fire diamond top-ups in Tajikistan',back:'← Back',
+  aboutTitle:'About AlmazStoreTJ',
+  aboutP1:'AlmazStoreTJ (ASTJ) is a trusted Free Fire diamond top-up service in Tajikistan. We have operated for over 1 year and completed thousands of orders.',
+  aboutP2:'Diamonds are delivered instantly through your Player UID. Every payment comes with a transparent official digital receipt, with clear pricing and a straightforward process.',
+  aboutP3:'Read verified customer reviews at @otz_behruz.',
+  aboutOk:'Awesome!',
   lvlTab:'Level Up Pass',continueCheckout:'Continue',currency:'TJS',selected:'selected',
   levelWarning:'⚠️ Each Level-Up Pass package can be purchased ONLY once per account. If the selected package has already been purchased on your account, please do not waste your time or ours!',
   discount:'−1.50',discountUnit:'/ unit',payAlif:'Pay via Alif Mobi',
@@ -1783,7 +1858,10 @@ function selectedTotalCents(){
   let cents=0;
   selectedPackages.forEach((qty,key)=>{
     const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
-    if(p)cents+=Math.round(packagePrice(p,qty)*100)*qty;
+    if(p){
+      const safeQty=LVL_PKGS.some(x=>x.k===key)?1:qty;
+      cents+=Math.round(packagePrice(p,safeQty)*100)*safeQty;
+    }
   });
   return cents;
 }
@@ -1813,10 +1891,13 @@ function packageCard(p,isLevel=false){
     ?`<span class="discount-badge">${safeText(tr('discount'))} −1.50${safeText(tr('discountUnit'))}</span>`:'';
   const klass=`pkg-card${chosen?' hi':''}${isVoucher?` vou-card voucher-${p.voucher}`:''}`;
   const checkmark=chosen?'<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.2 3.1 3.1L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>':'';
+  const quantityMarkup=chosen
+    ?(isLevel?'<span class="lvl-qty" aria-label="1">1</span>':`<div class="qty-stepper" aria-label="${safeText(pkgName(p))}: ${safeText(tr('quantity'))}"><button type="button" data-step="-1" aria-label="−">−</button><span>${qty}</span><button type="button" data-step="1" aria-label="+">+</button></div>`)
+    :'<span aria-hidden="true"></span>';
   return `<div class="${klass}" data-k="${safeText(p.k)}">
     <div class="pkg-top"><span class="pkg-icon">${icon}</span>${badge}<button type="button" class="pkg-check" aria-label="${safeText(pkgName(p))}: ${safeText(chosen?tr('selected'):tr('selectPackage'))}" aria-pressed="${chosen}">${checkmark}</button></div>
     <div class="pkg-info"><p class="pkg-name">${name}</p><p class="pkg-price">${fmtMoney(unit)} ${safeText(currencyLabel())}</p></div>
-    <div class="pkg-bottom">${chosen?`<div class="qty-stepper" aria-label="${safeText(pkgName(p))}: ${safeText(tr('quantity'))}"><button type="button" data-step="-1" aria-label="−">−</button><span>${qty}</span><button type="button" data-step="1" aria-label="+">+</button></div>`:'<span aria-hidden="true"></span>'}</div>
+    <div class="pkg-bottom">${quantityMarkup}</div>
   </div>`;
 }
 function renderPackageList(containerId,list,isLevel=false){
@@ -1828,6 +1909,7 @@ function renderPackageList(containerId,list,isLevel=false){
       const step=e.target.closest('[data-step]');
       if(step){
         e.stopPropagation();
+        if(LVL_PKGS.some(p=>p.k===key)){selectedPackages.set(key,1);renderHome();return;}
         const next=(selectedPackages.get(key)||1)+Number(step.dataset.step);
         if(next<1)return;
         selectedPackages.set(key,next);
@@ -1855,10 +1937,12 @@ function updateCheckout(){
     if(p)selected.push(shortPackageName(p));
   });
   checkoutTotalFormatted=fmtMoney(selectedTotal());
-  bar.classList.toggle('on',selected.length>0&&activeTab==='home');
+  const hasSelection=selected.length>0;
+  bar.classList.toggle('on',hasSelection);
   $('checkoutItems').textContent=selected.join(', ');
-  $('checkoutTotal').textContent=`${checkoutTotalFormatted} ${currencyLabel()}`;
+  $('checkoutTotal').textContent=`${hasSelection?checkoutTotalFormatted:'0'} ${currencyLabel()}`;
   $('checkoutContinueTxt').textContent=tr('continueCheckout');
+  $('checkoutContinue').disabled=!hasSelection;
 }
 function renderHome(){
   renderPkgs('listDia','dia');renderPkgs('listVou','vou');renderLvlPkgs('listLvl');
@@ -1911,6 +1995,7 @@ function updateUI(){
   text('bankTitle','bankTitle');text('bankCopyTxt','copyNumber');text('bankDone','understood');
   $('bankSteps').innerHTML=tr('bankSteps').map((step,i)=>`<li>${safeText(step.replace('{amount}',currentPaymentTotalText()))}</li>`).join('');
   $('checkoutContinueTxt').textContent=tr('continueCheckout');
+  updateHubUI();
   renderFAQ();renderOrders();renderHome();
 }
 function openPaymentLink(url){
@@ -1940,21 +2025,92 @@ function showWarnModal(){
   $('warnOkTxt').textContent=tr('warnOk');$('warnCancelTxt').textContent=tr('warnCancel');
   $('warnModal').classList.remove('hide');
 }
+function updateHubUI(){
+  const text=(id,key)=>{if($(id))$(id).textContent=tr(key);};
+  text('hubSub','hubSub');text('hubShopTxt','hubShop');text('hubOrdersTxt','hubOrders');
+  text('hubSupportTxt','hubSupport');text('hubSettingsTxt','hubSettings');text('hubAboutTxt','hubAbout');
+  text('aboutTitle','aboutTitle');text('aboutP1','aboutP1');text('aboutP2','aboutP2');
+  text('aboutP3','aboutP3');text('aboutOkTxt','aboutOk');
+  $$('.screen-back span').forEach(el=>el.textContent=tr('back'));
+}
+function prepareHubNavigation(){
+  const app=$('app');
+  const home=$('scr-main');
+  if(!app||!home||$('scr-hub'))return;
+  home.id='scr-home';
+  const tabs=home.querySelector('.tabs');
+  const tabBar=home.querySelector('.tab-bar');
+  if(tabBar)tabBar.remove();
+  const homePage=$('tp-home');
+  if(homePage)homePage.classList.remove('tab-page');
+  const homeBack=document.createElement('button');
+  homeBack.type='button';homeBack.className='screen-back';homeBack.dataset.back='hub';
+  homeBack.innerHTML='<i class="fa-solid fa-arrow-left" aria-hidden="true"></i><span></span>';
+  if(tabs)tabs.insertBefore(homeBack,home.querySelector('.tab-pages'));
+  ['orders','support','settings'].forEach(name=>{
+    const page=$('tp-'+name);
+    if(!page)return;
+    page.classList.remove('tab-page','on');
+    page.classList.add('scr');
+    page.id='scr-'+name;
+    app.appendChild(page);
+    const back=document.createElement('button');
+    back.type='button';back.className='screen-back';back.dataset.back='hub';
+    back.innerHTML='<i class="fa-solid fa-arrow-left" aria-hidden="true"></i><span></span>';
+    page.insertBefore(back,page.firstChild);
+  });
+  const hub=document.createElement('section');
+  hub.id='scr-hub';hub.className='scr hub-screen';
+  hub.innerHTML=`
+    <header class="hub-head">
+      <div class="hub-logo"><i class="fa-solid fa-gem" aria-hidden="true"></i></div>
+      <h1>AlmazStoreTJ</h1><p id="hubSub"></p>
+    </header>
+    <nav class="hub-stack" aria-label="Main menu">
+      <button type="button" class="hub-action primary" id="hubShop"><span class="hub-action-icon"><i class="fa-solid fa-bag-shopping"></i></span><span class="hub-action-label" id="hubShopTxt"></span><i class="fa-solid fa-chevron-right hub-action-arrow"></i></button>
+      <button type="button" class="hub-action primary" id="hubOrders"><span class="hub-action-icon"><i class="fa-solid fa-box-open"></i></span><span class="hub-action-label" id="hubOrdersTxt"></span><i class="fa-solid fa-chevron-right hub-action-arrow"></i></button>
+      <button type="button" class="hub-action primary" id="hubSupport"><span class="hub-action-icon"><i class="fa-solid fa-headset"></i></span><span class="hub-action-label" id="hubSupportTxt"></span><i class="fa-solid fa-chevron-right hub-action-arrow"></i></button>
+      <button type="button" class="hub-action neutral" id="hubSettings"><span class="hub-action-icon"><i class="fa-solid fa-gear"></i></span><span class="hub-action-label" id="hubSettingsTxt"></span><i class="fa-solid fa-chevron-right hub-action-arrow"></i></button>
+      <button type="button" class="hub-action neutral" id="hubAbout"><span class="hub-action-icon"><i class="fa-solid fa-circle-info"></i></span><span class="hub-action-label" id="hubAboutTxt"></span><i class="fa-solid fa-chevron-right hub-action-arrow"></i></button>
+    </nav>`;
+  app.insertBefore(hub,home);
+  const about=document.createElement('div');
+  about.id='aboutModal';about.className='about-modal hide';
+  about.innerHTML=`
+    <div class="about-ov" id="aboutOv"></div>
+    <section class="about-box" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+      <div class="about-mark"><i class="fa-solid fa-gem" aria-hidden="true"></i></div>
+      <h3 id="aboutTitle"></h3>
+      <div class="about-copy"><p id="aboutP1"></p><p id="aboutP2"></p><p id="aboutP3"></p></div>
+      <button type="button" class="btn btn-primary" id="aboutOk"><span id="aboutOkTxt"></span></button>
+    </section>`;
+  app.appendChild(about);
+}
 function init(){
-  showScr('scr-main');showTab('home');renderHome();updateUI();
+  prepareHubNavigation();
+  activeTab='home';renderHome();updateUI();showScr('scr-hub');
   $$('.tab-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
   $$('.category-tab').forEach(b=>b.onclick=()=>showCategory(b.dataset.category));
+  $('hubShop').onclick=()=>{showScr('scr-home');renderHome();};
+  $('hubOrders').onclick=()=>showScr('scr-orders');
+  $('hubSupport').onclick=()=>showScr('scr-support');
+  $('hubSettings').onclick=()=>{updateUI();showScr('scr-settings');};
+  $('hubAbout').onclick=()=>$('aboutModal').classList.remove('hide');
+  $('aboutOv').onclick=()=>$('aboutModal').classList.add('hide');
+  $('aboutOk').onclick=()=>$('aboutModal').classList.add('hide');
   $('checkoutContinue').onclick=()=>{
     if(!selectedPackages.size){toast(tr('noSelection'));return;}
     const pieces=[];
     selectedPackages.forEach((qty,key)=>{
       const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
-      if(p)pieces.push(`${pkgName(p)} × ${qty}`);
+      if(p)pieces.push(`${pkgName(p)} × ${LVL_PKGS.some(x=>x.k===key)?1:qty}`);
     });
-    const ids=Array.from(selectedPackages.keys());
+    const ids=Array.from(selectedPackages.keys()).filter(key=>PKGS.some(p=>p.k===key)||LVL_PKGS.some(p=>p.k===key));
+    if(!ids.length||!pieces.length){toast(tr('noSelection'));return;}
+    curOrder={};
     curOrder.pkg=ids.join(',');
     curOrder.pkgName=pieces.join(', ');
-    curOrder.totalText=checkoutTotalFormatted;
+    curOrder.totalText=fmtMoney(selectedTotal());
     curOrder.price=`${curOrder.totalText} ${currencyLabel()}`;
     $('payPkg').textContent=curOrder.pkgName;$('payPrice').textContent=curOrder.price;
     $('payReminder').textContent=tr('payReminder').replace('{amount}',curOrder.totalText);
@@ -1969,12 +2125,19 @@ function init(){
   });
   $$('[data-back]').forEach(btn=>btn.onclick=()=>{
     const target=btn.dataset.back;
-    if(target==='main'){showScr('scr-main');showTab('home');}
+    if(target==='hub')showScr('scr-hub');
+    else if(target==='main')showScr('scr-home');
     else if(target==='uid')showScr('scr-uid');
     else if(target==='pay')showScr('scr-pay');
   });
   $('warnOv').onclick=()=>{hideWarnModal();};
-  $('warnOk').onclick=()=>{hideWarnModal();showScr('scr-uid');};
+  $('warnOk').onclick=()=>{
+    hideWarnModal();
+    if(!curOrder.pkg||!curOrder.pkgName||!curOrder.price||!selectedPackages.size){
+      toast(tr('noSelection'));showScr('scr-home');return;
+    }
+    showScr('scr-uid');
+  };
   $('warnCancel').onclick=()=>hideWarnModal();
   $('btnUID').onclick=()=>{
     const uid=$('inUID').value.trim();
@@ -2009,22 +2172,45 @@ function init(){
   };
   $('btnConfirm').onclick=async()=>{
     if(processingImage){toast(tr('imageProcessing'));return;}
-    if(!ssData){toast(tr('uploadMissing'),3000);return;}
+    if(typeof ssData!=='string'||!ssData.startsWith('data:image/')){
+      toast(tr('uploadMissing'),3000);return;
+    }
+    const initData=typeof tgApp?.initData==='string'&&tgApp.initData.trim()
+      ?tgApp.initData.trim()
+      :(typeof window.Telegram?.WebApp?.initData==='string'?window.Telegram.WebApp.initData.trim():'');
+    if(!initData){toast(tr('authRequired'),4000);return;}
+    const ids=Array.from(selectedPackages.keys()).filter(key=>PKGS.some(p=>p.k===key)||LVL_PKGS.some(p=>p.k===key));
+    const packageNames=[];
+    selectedPackages.forEach((qty,key)=>{
+      const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
+      if(p)packageNames.push(`${pkgName(p)} × ${LVL_PKGS.some(x=>x.k===key)?1:qty}`);
+    });
+    const pkg=String(curOrder.pkg||ids.join(',')).trim();
+    const pkgNameValue=String(curOrder.pkgName||packageNames.join(', ')).trim();
+    const price=String(curOrder.price||`${curOrder.totalText||fmtMoney(selectedTotal())} ${currencyLabel()}`).trim();
+    if(!curOrder.uid){toast(tr('uidReq'),3000);return;}
+    if(!pkg||!pkgNameValue||!price){toast(tr('noSelection'),3000);return;}
     const confirmBtn=$('btnConfirm');if(confirmBtn.disabled)return;confirmBtn.disabled=true;
     const orderDate=new Date();
-    const order={id:nextId(orderDate),uid:curOrder.uid,pkg:curOrder.pkg,pkgName:curOrder.pkgName,
-      price:curOrder.price,status:'pending',date:orderDate.toISOString()};
+    const order={
+      id:nextId(orderDate),
+      uid:String(curOrder.uid),
+      pkg,
+      pkgName:pkgNameValue,
+      price,
+      status:'pending',
+      date:orderDate.toISOString()
+    };
     try{
-      if(!tgApp||!tgApp.initData){toast(tr('authRequired'),4000);return;}
       const response=await fetch(`${ASTJ_API}/orders`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({initData:tgApp.initData,order:order,screenshot:ssData})
+        body:JSON.stringify({initData,order,screenshot:ssData})
       });
-      const result=await response.json();
-      if(!response.ok||!result.success){
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result?.success){
         console.error('Order API error:',result);
-        toast(tr('serverError')+' '+(result.error||result.message||JSON.stringify(result)),6000);return;
+        toast(tr('serverError')+' '+(result?.error||result?.message||JSON.stringify(result)),6000);return;
       }
       try{saveOrd(order);}catch(e){console.error('Local order save failed:',e);}
       $('confBox').innerHTML=`<b>${safeText(tr('orderId'))}:</b> ${safeText(order.id)}<br><b>${safeText(tr('playerId'))}:</b> ${safeText(order.uid)}<br><b>${safeText(tr('packageLabel'))}:</b> ${safeText(order.pkgName)} — ${safeText(order.price)}<br><b>${safeText(tr('timeLabel'))}:</b> ${safeText(dateTimeText(order.date))}`;
@@ -2039,7 +2225,7 @@ function init(){
     if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}
     $('uploadBox').classList.remove('hide');$('prevWrap').classList.add('hide');
     $('scr-conf').querySelector('.conf-wrap').classList.remove('success');renderHome();
-    showScr('scr-main');showTab('home');
+    showScr('scr-hub');
   };
   $('mOv').onclick=()=>$('modal').classList.add('hide');$('mCls').onclick=()=>$('modal').classList.add('hide');
   $('lvlClose').onclick=()=>hideLvlPopup();$('lvlOv').onclick=()=>hideLvlPopup();
@@ -2096,9 +2282,10 @@ function compressImageToJpeg(file,objectUrl){
 async function boot(){
   const app=$('app');
   const splash=$('splash');
+  const minimumSplash=new Promise(resolve=>setTimeout(resolve,4000));
 
   try{
-    const user = await authenticateTelegram();
+    const [user] = await Promise.all([authenticateTelegram(),minimumSplash]);
 
 if(!user){
   document.body.innerHTML = `
@@ -2114,11 +2301,14 @@ if(!user){
 
     init();
     app.classList.add('ready');
+    requestAnimationFrame(()=>splash.classList.add('done'));
 
   }catch(error){
+    await minimumSplash;
     console.error('AlmazStore startup error:',error);
     init();
     app.classList.add('ready');
+    requestAnimationFrame(()=>splash.classList.add('done'));
   }
 }
 
