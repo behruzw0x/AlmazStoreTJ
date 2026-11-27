@@ -432,6 +432,7 @@ html,body{overflow:hidden}
 #scr-home .tab-pages{overflow:visible}
 #scr-home .tab-bar{display:none!important}
 #tp-home{position:relative!important;inset:auto!important;height:100%;overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;transform:none!important}
+#scr-home:not(.on) #tp-home,#scr-home:not(.on) #tp-home *{visibility:hidden!important;pointer-events:none!important}
 #tp-home{overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important}
 #tp-home .category-panel{max-height:none!important;overflow:visible;padding-bottom:8px;visibility:visible}
 #tp-home .category-panel:not(.on){display:none}
@@ -1525,240 +1526,6 @@ function updateUI(){
   renderFAQ();
 }
 
-// ── INIT ─────────────────────────────────────
-function init(){
-  // Open the main menu directly. Language changes remain available in Settings.
-  showScr('scr-main');
-  showTab('home');
-  renderHome();
-  updateUI();
-
-  // Tabs
-  $$('.tab-btn').forEach(b=>{b.onclick=()=>showTab(b.dataset.tab);});
-
-  // Home
-  $$('.category-tab').forEach(b=>{
-    b.onclick=()=>showCategory(b.dataset.category);
-  });
-  $('btnOrderNow').onclick=()=>{
-    showCategory('dia');
-  };
-
-  // Support
-  $('btnTg').onclick=()=>window.open(`https://t.me/${TG_ADMIN}`,'_blank');
-  $('btnWA').onclick=()=>window.open(WA_LINK,'_blank');
-  $('btnReviews').onclick=()=>window.open(REVIEWS_LINK,'_blank');
-
-  // Settings: lang
-  $('rowLang').onclick=()=>$('langDD').classList.toggle('hide');
-  $$('#langDD .lang-opt').forEach(opt=>{
-    opt.onclick=()=>{
-      lang=opt.dataset.l;
-        setStored('almaz_lang',lang);
-      $('langDD').classList.add('hide');
-      updateUI();
-      renderHome();
-    };
-  });
-
-  // Back buttons
-  $$('[data-back]').forEach(btn=>{
-    btn.onclick=()=>{
-      const t2=btn.dataset.back;
-      if(t2==='main'){showScr('scr-main');showTab('home');}
-      else if(t2==='uid') showScr('scr-uid');
-      else if(t2==='pay') showScr('scr-pay');
-    };
-  });
-
-  // Level-Up popup
-  $('lvlClose').onclick=()=>hideLvlPopup();
-  $('lvlOv').onclick=()=>hideLvlPopup();
-
-  // Warn modal overlay → also goes back to home
-  $('warnOv').onclick=()=>{
-    hideWarnModal();
-    pendingPkg=null;
-  };
-
-  // Availability modal
-  $('availYes').onclick=()=>{
-    hideAvailModal();
-    if(!pendingLvlPkg) return;
-    pendingPkg={
-      k: pendingLvlPkg.k,
-      n: lvlPkgDisplayName(pendingLvlPkg),
-      ntj: lvlPkgDisplayName(pendingLvlPkg),
-      nru: lvlPkgDisplayName(pendingLvlPkg),
-      nen: lvlPkgDisplayName(pendingLvlPkg),
-      p: pendingLvlPkg.p,
-      c:'lvl'
-    };
-    pendingLvlPkg=null;
-    showWarnModal();
-  };
-  $('availNo').onclick=()=>{
-    hideAvailModal();
-    pendingLvlPkg=null;
-    showScr('scr-main');
-    showTab('home');
-  };
-
-  // Info modal
-  $('warnOk').onclick=()=>{
-    hideWarnModal();
-    if(!pendingPkg) return;
-    const pkg=pendingPkg; pendingPkg=null;
-    curOrder.pkg=pkg.k;
-    curOrder.pkgName=pkgName(pkg);
-    curOrder.price=pkg.p;
-    $('payPkg').textContent=pkgName(pkg);
-    $('payPrice').textContent=pkg.p;
-    showScr('scr-uid');
-  };
-  $('warnCancel').onclick=()=>{
-    hideWarnModal();
-    pendingPkg=null;
-    showScr('scr-main');
-    showTab('home');
-  };
-
-  // UID next
-  function showErr(errId,rowId,msg){
-    $(errId).textContent=msg;$(errId).classList.remove('hide');
-    $(rowId).classList.add('err');
-  }
-  function clearErr(errId,rowId){
-    $(errId).classList.add('hide');$(rowId).classList.remove('err');
-  }
-  $('btnUID').onclick=()=>{
-    const uid=$('inUID').value.trim();
-    if(!uid){showErr('errUID','rowUID',t('uidReq'));return;}
-    if(!/^\d{5,12}$/.test(uid)){showErr('errUID','rowUID',t('uidBad'));return;}
-    clearErr('errUID','rowUID');
-    curOrder.uid=uid;
-    showScr('scr-pay');
-  };
-
-  // Payment next
-  $('btnPay').onclick=()=>showScr('scr-ss');
-
-  // Copy buttons
-  $$('.copy-btn').forEach(btn=>{
-    btn.onclick=()=>{
-      navigator.clipboard.writeText(btn.dataset.copy).catch(()=>{
-        const ta=document.createElement('textarea');
-        ta.value=btn.dataset.copy;
-        document.body.appendChild(ta);
-        ta.select();document.execCommand('copy');
-        document.body.removeChild(ta);
-      });
-      const s=btn.querySelector('span');
-      btn.classList.add('done');s.textContent=t('copied');
-      setTimeout(()=>{btn.classList.remove('done');s.textContent=t('copy');},2000);
-    };
-  });
-
-  // Screenshot
-  $('uploadBox').onclick=()=>$('fileInp').click();
-  $('fileInp').onchange=e=>{
-    const f=e.target.files[0];if(!f) return;
-    const r=new FileReader();
-    r.onload=ev=>{
-      ssData=ev.target.result;
-      $('prevImg').src=ssData;
-      $('uploadBox').classList.add('hide');
-      $('prevWrap').classList.remove('hide');
-    };
-    r.readAsDataURL(f);
-  };
-  $('btnRm').onclick=()=>{
-    ssData=null;$('prevImg').src='';
-    $('fileInp').value='';
-    $('uploadBox').classList.remove('hide');
-    $('prevWrap').classList.add('hide');
-  };
-
-    // Confirm order
-  $('btnConfirm').onclick=async()=>{
-    if(!ssData){
-      toast(tr('uploadMissing'),3000);
-      return;
-    }
-
-    const confirmBtn = $('btnConfirm');
-    if(confirmBtn.disabled) return;
-    confirmBtn.disabled = true;
-
-    const orderDate=new Date();
-    const order={
-      id:nextId(orderDate),
-      uid:curOrder.uid,
-      pkg:curOrder.pkg,
-      pkgName:curOrder.pkgName,
-      price:curOrder.price,
-      status:'pending',
-      date:orderDate.toISOString()
-    };
-
-    try{
-      if(!tgApp || !tgApp.initData){
-        toast('Telegram тасдиқ нашуд. Мағозаро аз бот кушоед.',4000);
-        return;
-      }
-
-      const response = await fetch(`${ASTJ_API}/orders`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({initData:tgApp.initData,order:order,screenshot:ssData})
-      
-      });
-      const result = await response.json();
-
-      if(!response.ok || !result.success){
-        console.error('Order API error:',result);
-        toast('Хатои сервер: ' + (result.error || result.message || JSON.stringify(result)), 6000);
-
-        return;
-      }
-
-      try{ saveOrd(order); }
-      catch(e){ console.error('Local order save failed:',e); }
-
-      $('confBox').innerHTML=`
-        <b>ID фармоиш:</b> ${order.id}<br>
-        <b>ID бозингар:</b> ${order.uid}<br>
-        <b>Баста:</b> ${order.pkgName} — ${order.price}<br>
-        <b>Вақт:</b> ${dateTimeText(order.date)}`;
-      $('scr-conf').querySelector('.conf-wrap').classList.remove('success');
-      showScr('scr-conf');
-      requestAnimationFrame(()=>requestAnimationFrame(()=>$('scr-conf').querySelector('.conf-wrap').classList.add('success')));
-      renderHome();
-
-    }catch(error){
-      console.error('Order submission failed:',error);
-      toast('Пайвастшавӣ ба сервер қатъ шуд. Фармоиш сабт нашуд.',4000);
-    }finally{
-      confirmBtn.disabled = false;
-    }
-  };
-
-  // Done
-  $('btnDone').onclick=()=>{
-    curOrder={};ssData=null;
-    $('inUID').value='';
-    $('fileInp').value='';
-    $('uploadBox').classList.remove('hide');
-    $('prevWrap').classList.add('hide');
-     $('scr-conf').querySelector('.conf-wrap').classList.remove('success');
-    showScr('scr-main');showTab('home');
-  };
-
-  // Order modal
-  $('mOv').onclick=()=>$('modal').classList.add('hide');
-  $('mCls').onclick=()=>$('modal').classList.add('hide');
-}
-
 // ── MULTI-SELECT CATALOG & LIQUID-GLASS CHECKOUT ─────────
 // Keep the established API/authentication contract; this layer only replaces
 // catalog data, presentation, and the client-side order flow before submission.
@@ -1847,6 +1614,7 @@ const selectedPackages=new Map();
 let checkoutTotalFormatted='0.00';
 let processingImage=false;
 let previewObjectUrl=null;
+let appInitialized=false;
 function tr(key){return TR[lang]?.[key]??key;}
 function fmtMoney(value){return (Math.round((Number(value)||0)*100)/100).toFixed(2);}
 function currencyLabel(){return tr('currency');}
@@ -2087,10 +1855,14 @@ function prepareHubNavigation(){
   app.appendChild(about);
 }
 function init(){
+  if(appInitialized)return;
+  try{
+  console.info('[AlmazStore] Initializing Mini App UI');
   prepareHubNavigation();
-  activeTab='home';renderHome();updateUI();showScr('scr-hub');
-  $$('.tab-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-  $$('.category-tab').forEach(b=>b.onclick=()=>showCategory(b.dataset.category));
+  activeTab='home';
+  showScr('scr-hub');
+  // Bind the hub before rendering the rest of the UI so a rendering issue
+  // cannot leave the visible menu without working controls.
   $('hubShop').onclick=()=>{showScr('scr-home');renderHome();};
   $('hubOrders').onclick=()=>showScr('scr-orders');
   $('hubSupport').onclick=()=>showScr('scr-support');
@@ -2098,6 +1870,8 @@ function init(){
   $('hubAbout').onclick=()=>$('aboutModal').classList.remove('hide');
   $('aboutOv').onclick=()=>$('aboutModal').classList.add('hide');
   $('aboutOk').onclick=()=>$('aboutModal').classList.add('hide');
+  $$('.tab-btn').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  $$('.category-tab').forEach(b=>b.onclick=()=>showCategory(b.dataset.category));
   $('checkoutContinue').onclick=()=>{
     if(!selectedPackages.size){toast(tr('noSelection'));return;}
     const pieces=[];
@@ -2230,6 +2004,13 @@ function init(){
   $('mOv').onclick=()=>$('modal').classList.add('hide');$('mCls').onclick=()=>$('modal').classList.add('hide');
   $('lvlClose').onclick=()=>hideLvlPopup();$('lvlOv').onclick=()=>hideLvlPopup();
   $('availYes').onclick=()=>hideAvailModal();$('availNo').onclick=()=>hideAvailModal();
+  updateUI();
+  appInitialized=true;
+  console.info('[AlmazStore] Mini App UI initialized; hub handlers are bound');
+  }catch(error){
+    console.error('[AlmazStore] Mini App UI initialization failed',error);
+    throw error;
+  }
 }
 function compressImageToJpeg(file,objectUrl){
   const canvasToJpeg=(canvas)=>{
@@ -2279,36 +2060,44 @@ function compressImageToJpeg(file,objectUrl){
   })).catch(()=>drawBitmap());
 }
 
+let bootStarted=false;
 async function boot(){
+  if(bootStarted)return;
+  bootStarted=true;
   const app=$('app');
   const splash=$('splash');
   const minimumSplash=new Promise(resolve=>setTimeout(resolve,4000));
+  let user=null;
 
   try{
-    const [user] = await Promise.all([authenticateTelegram(),minimumSplash]);
+    user=await authenticateTelegram();
+  }catch(error){
+    console.error('[AlmazStore] Telegram authentication startup error',error);
+  }
+  await minimumSplash;
 
-if(!user){
-  document.body.innerHTML = `
-    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#101014;color:white;text-align:center;padding:25px;font-family:Arial,sans-serif;">
-      <div style="max-width:420px;line-height:1.8;">
-        <p>Барои бехатарӣ сомонаро дар браузер дастнорас кардем. Лутфан мағозаро тавассути Telegram-бот кушоед.</p>
-        <a href="https://t.me/AlmazStoreTJ_Bot" target="_blank" rel="noopener noreferrer" style="color:#35a7ff;font-weight:bold;text-decoration:none;">ССЫЛКАИ БОТ ✅</a>
-      </div>
-    </div>
-  `;
-  return;
+  if(!user){
+    console.error('[AlmazStore] Authentication did not return a Telegram user; showing the existing access message');
+    document.body.innerHTML=`
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#101014;color:white;text-align:center;padding:25px;font-family:Arial,sans-serif;">
+        <div style="max-width:420px;line-height:1.8;">
+          <p>Барои бехатарӣ сомонаро дар браузер дастнорас кардем. Лутфан мағозаро тавассути Telegram-бот кушоед.</p>
+          <a href="https://t.me/AlmazStoreTJ_Bot" target="_blank" rel="noopener noreferrer" style="color:#35a7ff;font-weight:bold;text-decoration:none;">ССЫЛКАИ БОТ ✅</a>
+        </div>
+      </div>`;
+    return;
   }
 
+  try{
     init();
-    app.classList.add('ready');
-    requestAnimationFrame(()=>splash.classList.add('done'));
-
   }catch(error){
-    await minimumSplash;
-    console.error('AlmazStore startup error:',error);
-    init();
-    app.classList.add('ready');
-    requestAnimationFrame(()=>splash.classList.add('done'));
+    console.error('[AlmazStore] UI startup failed; init will not be retried to avoid duplicate handlers',error);
+  }
+
+  app.classList.add('ready');
+  if(splash){
+    splash.classList.add('done');
+    splash.setAttribute('aria-hidden','true');
   }
 }
 
