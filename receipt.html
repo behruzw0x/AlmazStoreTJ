@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+  html,body{width:800px;height:1000px;overflow:hidden;position:relative;background:#e0f2fe}
+  .bg{position:absolute;inset:0;width:800px;height:1000px;object-fit:fill}
+  .val{position:absolute;right:122px;text-align:right;font-weight:800;font-size:23px;color:#0f172a;max-width:350px;line-height:1.18;word-break:break-word}
+  #id{top:384px}
+  #pkg{top:468px}
+  #price{top:555px;color:#059669;font-size:25px}
+  #uid{top:640px;color:#0284c7;font-size:25px}
+</style>
+</head>
+<body>
+  <img class="bg" src="receipt-bg.jpg"/>
+  <div class="val" id="id"></div>
+  <div class="val" id="pkg"></div>
+  <div class="val" id="price"></div>
+  <div class="val" id="uid"></div>
+  <script>
+    const p = new URLSearchParams(location.search);
+    document.getElementById('id').textContent = p.get('id') || '';
+    const pkg = p.get('pkg') || '';
+    const pkgEl = document.getElementById('pkg');
+    pkgEl.textContent = pkg;
+    if (pkg.length > 22) { pkgEl.style.fontSize = '18px'; pkgEl.style.top = '460px'; }
+    document.getElementById('price').textContent = (p.get('price') || '') + ' сомонӣ';
+    document.getElementById('uid').textContent = p.get('uid') || '';
+  </script>
+</body>
+  </html>
+  
