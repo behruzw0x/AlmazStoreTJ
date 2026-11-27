@@ -102,15 +102,25 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
 /* BUTTONS */
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;
   border:none;border-radius:14px;padding:16px 20px;font-size:16px;font-weight:600;
-  cursor:pointer;width:100%;transition:opacity .15s}
-.btn:active{opacity:.8}
+  cursor:pointer;width:100%;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.62);
+  box-shadow:0 10px 24px rgba(31,55,88,.15),inset 0 1px 0 rgba(255,255,255,.66);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),filter .2s,box-shadow .2s}
+.btn::before{content:"";position:absolute;inset:0 0 auto;height:55%;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0))}
+.btn>*{position:relative;z-index:1}
+.btn:active{transform:scale(.97);filter:brightness(.98)}
 .btn-primary{background:linear-gradient(135deg,#2389E8,#1265C4);color:#fff;
-  box-shadow:0 10px 22px rgba(22,116,209,.22)}
+  border-color:rgba(255,255,255,.48);
+  box-shadow:0 12px 26px rgba(22,116,209,.28),inset 0 1px 0 rgba(255,255,255,.68),inset 0 -2px 0 rgba(5,59,121,.2)}
 .btn-pill{border-radius:50px;width:auto;padding:15px 36px}
-.btn-back{background:none;border:none;color:var(--fg);font-size:20px;padding:14px 18px;cursor:pointer}
+.btn-back{background:none;border:none;color:var(--fg);font-size:20px;padding:14px 18px;cursor:pointer;transition:transform .2s}
+.btn-back:active{transform:scale(.94)}
 .btn-ghost{background:rgba(255,255,255,.58);color:var(--fg);border:1px solid var(--border);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
-.btn-wa{background:#25D366;color:#fff}
+  box-shadow:0 10px 22px rgba(39,65,97,.13),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(83,119,160,.08);
+  backdrop-filter:blur(22px) saturate(175%);-webkit-backdrop-filter:blur(22px) saturate(175%)}
+.btn-wa{background:linear-gradient(135deg,#35E27D,#16A854);color:#fff;
+  box-shadow:0 12px 26px rgba(20,174,83,.25),inset 0 1px 0 rgba(255,255,255,.68),inset 0 -2px 0 rgba(0,101,44,.18)}
 
 /* TABS */
 #scr-main{padding-bottom:0}
@@ -128,6 +138,7 @@ i.fa-solid,i.fa-regular,i.fa-brands{line-height:1}
   border-radius:24px;box-shadow:0 18px 42px rgba(55,87,123,.2),inset 0 1px 0 rgba(255,255,255,.9);
   backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);
   padding-bottom:calc(7px + env(safe-area-inset-bottom))}
+.scr.on .tab-bar .tab-btn,.scr.on .tab-bar .tab-btn *{visibility:visible}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:8px 2px;border:none;background:transparent;border-radius:18px;color:var(--muted);
   font-size:11px;cursor:pointer;transition:.2s}
@@ -297,7 +308,6 @@ input::placeholder{color:var(--muted)}
 .sum-row{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
 .sum-txt{font-size:14px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sum-price{font-size:16px;font-weight:700;color:var(--primary);flex-shrink:0}
-.pay-note{font-size:14px;color:var(--muted);margin-bottom:12px}
 .copy-row{display:flex;justify-content:space-between;align-items:center;padding:15px;
   background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:10px;
   box-shadow:0 8px 24px rgba(58,93,133,.08),inset 0 1px 0 rgba(255,255,255,.72);
@@ -305,8 +315,11 @@ input::placeholder{color:var(--muted)}
 .copy-lbl{font-size:12px;color:var(--muted);margin-bottom:2px}
 .copy-val{font-size:15px;font-weight:600}
 .copy-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;
-  background:var(--pl);border:none;border-radius:8px;color:var(--primary);font-size:12px;
-  font-weight:500;cursor:pointer;flex-shrink:0;white-space:nowrap}
+  background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(226,238,251,.48));border:1px solid rgba(255,255,255,.9);
+  border-radius:10px;color:var(--primary);font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;white-space:nowrap;
+  box-shadow:0 5px 13px rgba(38,70,108,.12),inset 0 1px 0 rgba(255,255,255,.98);
+  transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.copy-btn:active{transform:scale(.97)}
 .copy-btn.done{background:var(--okl);color:var(--ok)}
 .warn-card{display:flex;gap:10px;align-items:flex-start;padding:13px;
   background:var(--gl);border:1px solid var(--gold);border-radius:12px;margin:14px 0;
@@ -350,8 +363,10 @@ input::placeholder{color:var(--muted)}
   box-shadow:0 -16px 50px rgba(47,76,111,.18);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px)}
 .m-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .m-hdr h3{font-size:18px;font-weight:700}
-.m-cls{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;
-  width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+.m-cls{background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(225,237,249,.54));border:1px solid rgba(255,255,255,.9);color:var(--muted);font-size:18px;cursor:pointer;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:12px;
+  box-shadow:0 5px 13px rgba(38,70,108,.12),inset 0 1px 0 #fff;transition:transform .2s}
+.m-cls:active{transform:scale(.94)}
 .m-body{font-size:14px;line-height:1.8}
 .m-body img{max-width:100%;border-radius:10px;margin-top:10px;border:1px solid var(--border)}
 
@@ -416,7 +431,7 @@ html,body{overflow:hidden}
 .splash{display:none!important}
 #scr-main .tabs{height:100dvh;height:100vh}
 #scr-main .tab-pages{overflow:visible}
-#tp-home{overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:190px!important}
+#tp-home{overflow-y:auto!important;overscroll-behavior-y:contain;padding-bottom:230px!important}
 #tp-home .category-panel{max-height:none!important;overflow:visible;padding-bottom:8px;visibility:visible}
 #tp-home .category-panel:not(.on){display:none}
 .home-hdr{padding-top:max(18px,env(safe-area-inset-top))}
@@ -432,10 +447,10 @@ html,body{overflow:hidden}
 .category-tabs{background:rgba(255,255,255,.46);border-radius:22px}
 .category-tab{min-height:54px;font-size:11px}
 .category-tab.on{background:rgba(255,255,255,.72)}
-.pkg-list{gap:10px}
+.pkg-list{gap:12px}
 .pkg-card{
   position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0;
-  min-height:168px;padding:42px 12px 10px;border-radius:20px;overflow:hidden;
+  height:122px;min-height:122px;padding:35px 12px 3px;border-radius:20px;overflow:hidden;
   transition:transform .28s cubic-bezier(.2,.8,.2,1),background .2s,border-color .2s,box-shadow .2s;
 }
 .pkg-card::before,.pay-action::before,.checkout-bar::before,.tab-bar::before{
@@ -447,30 +462,41 @@ html,body{overflow:hidden}
 .pkg-top{position:absolute;top:10px;left:11px;right:11px;display:flex;align-items:center;justify-content:space-between}
 .pkg-top .discount-badge{position:static}
 .pkg-icon{font-size:22px;filter:drop-shadow(0 4px 8px rgba(22,116,209,.2))}
-.pkg-check{width:25px;height:25px;border:1.5px solid rgba(99,114,138,.35);border-radius:8px;background:rgba(255,255,255,.32);
-  display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;cursor:pointer}
-.pkg-card.hi .pkg-check{border-color:var(--primary);background:rgba(22,116,209,.15)}
+.pkg-check{width:25px;height:25px;border:1.5px solid rgba(99,114,138,.35);border-radius:9px;background:rgba(255,255,255,.4);
+  display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;
+  box-shadow:0 4px 12px rgba(30,59,93,.1),inset 0 1px 0 rgba(255,255,255,.88);
+  backdrop-filter:blur(16px) saturate(170%);-webkit-backdrop-filter:blur(16px) saturate(170%);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),background .2s,border-color .2s,box-shadow .2s}
+.pkg-check svg{width:14px;height:14px;display:block}
+.pkg-card.hi .pkg-check{border-color:rgba(66,157,255,.75);background:linear-gradient(145deg,#55B7FF,#1674D1);
+  box-shadow:0 5px 14px rgba(22,116,209,.35),inset 0 1px 0 rgba(255,255,255,.75)}
 .pkg-name{font-size:13px;min-height:32px;line-height:1.25}
-.pkg-price{font-size:12px;margin-top:5px}
+.pkg-price{font-size:12px;margin-top:3px}
 .pkg-desc{font-size:10px;min-height:14px}
-.pkg-bottom{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:auto;padding-top:10px;min-height:37px}
+.pkg-bottom{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:auto;padding-top:0;height:34px;min-height:34px}
 .qty-stepper{display:flex;align-items:center;gap:8px;height:30px;padding:3px;border-radius:12px;
-  background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
-.qty-stepper button{width:27px;height:24px;border:0;border-radius:9px;background:rgba(255,255,255,.74);color:var(--primary);font-size:17px;font-weight:700;line-height:1;cursor:pointer}
+  background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(227,239,252,.42));border:1px solid rgba(255,255,255,.88);
+  box-shadow:0 5px 13px rgba(38,70,108,.1),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(83,119,160,.08)}
+.qty-stepper button{width:27px;height:24px;border:1px solid rgba(255,255,255,.92);border-radius:9px;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(221,235,250,.78));color:var(--primary);
+  box-shadow:0 3px 8px rgba(41,78,119,.15),inset 0 1px 0 #fff;
+  font-size:17px;font-weight:700;line-height:1;cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s}
+.qty-stepper button:active{transform:scale(.97)}
+.qty-stepper button:focus-visible,.pkg-check:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .qty-stepper span{min-width:14px;text-align:center;font-size:12px;font-weight:700}
 .discount-badge{display:inline-flex;align-items:center;gap:3px;padding:4px 6px;border-radius:9px;background:rgba(128,78,212,.14);color:#7644C7;font-size:9px;font-weight:700;white-space:nowrap}
 .vou-card .pkg-icon{font-size:24px}
 .vou-card.voucher-lite .pkg-icon{color:#26A8FF;filter:drop-shadow(0 0 8px rgba(38,168,255,.6))}
 .vou-card.voucher-week .pkg-icon{color:#9958ED;filter:drop-shadow(0 0 8px rgba(153,88,237,.65))}
 .vou-card.voucher-month .pkg-icon{color:#D9A31D;filter:drop-shadow(0 0 8px rgba(217,163,29,.62))}
-.checkout-bar{position:fixed;z-index:21;left:14px;right:14px;bottom:calc(88px + env(safe-area-inset-bottom));
+.checkout-bar{position:fixed;z-index:95;left:14px;right:14px;bottom:calc(74px + env(safe-area-inset-bottom));
   display:flex;align-items:center;gap:12px;padding:12px;border-radius:22px;
   background:rgba(246,250,255,.7);border:1px solid rgba(255,255,255,.88);
   box-shadow:0 16px 42px rgba(31,55,88,.2),inset 0 1px 0 rgba(255,255,255,.96);
   backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);
   opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;
   transition:opacity .3s ease,transform .42s cubic-bezier(.2,.8,.2,1)}
-.checkout-bar.on{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.checkout-bar.on{opacity:1;transform:translateY(-8px) scale(1);pointer-events:auto}
 .checkout-summary{flex:1;min-width:0}
 .checkout-items{font-size:11px;font-weight:600;line-height:1.35;max-height:30px;overflow:hidden;color:var(--fg)}
 .checkout-total{margin-top:3px;font-size:14px;font-weight:800;color:var(--primary)}
@@ -483,11 +509,19 @@ html,body{overflow:hidden}
 .pay-action:active{transform:scale(.98);filter:brightness(.96)}
 .pay-alif{background:linear-gradient(135deg,#20B973,#09885A);box-shadow:0 10px 27px rgba(13,158,99,.24),inset 0 1px 0 rgba(255,255,255,.55)}
 .pay-dc{background:linear-gradient(135deg,#3E9BFA,#1D63C7);box-shadow:0 10px 27px rgba(39,115,210,.26),inset 0 1px 0 rgba(255,255,255,.55)}
-.pay-other{background:rgba(255,255,255,.4);color:var(--fg);border-color:rgba(255,255,255,.85)}
+.pay-other{background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(222,235,250,.42));color:var(--fg);border-color:rgba(255,255,255,.9);
+  box-shadow:0 11px 26px rgba(38,65,98,.14),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(90,121,157,.08)}
 .pay-reminder{display:flex;gap:10px;align-items:flex-start;margin:12px 0 4px;padding:13px 14px;
   border:1px solid rgba(22,116,209,.25);border-radius:16px;background:rgba(90,164,255,.12);
   color:var(--fg);font-size:12px;line-height:1.5;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
 .pay-reminder i{color:var(--primary);margin-top:2px}
+.level-warning{display:flex;align-items:flex-start;gap:10px;margin:12px 16px 8px;padding:13px 14px;
+  border:1px solid rgba(216,71,80,.32);border-radius:17px;
+  background:linear-gradient(145deg,rgba(255,245,246,.74),rgba(255,224,228,.46));
+  color:#A92F3B;font-size:12px;font-weight:700;line-height:1.5;
+  box-shadow:0 10px 24px rgba(153,39,54,.09),inset 0 1px 0 rgba(255,255,255,.92);
+  backdrop-filter:blur(24px) saturate(175%);-webkit-backdrop-filter:blur(24px) saturate(175%)}
+.level-warning i{color:#D84750;font-size:16px;margin-top:2px;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(216,71,80,.2))}
 .bank-steps{padding-left:22px;margin:0 0 16px}
 .bank-steps li{padding:5px 0 5px 3px}
 .bank-copy{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 16px;padding:12px;
@@ -504,10 +538,9 @@ html,body{overflow:hidden}
 .file-inp{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
 .upload-box{position:relative;min-height:150px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;
   background:rgba(255,255,255,.26);border-color:rgba(22,116,209,.3)}
-.ord-status{display:inline-flex;padding:5px 9px;border-radius:10px;background:rgba(22,134,90,.12);color:var(--ok);font-size:11px;font-weight:700}
 .ord-meta{font-size:13px;line-height:1.75}
 .m-box,.bank-box{border-top:1px solid rgba(255,255,255,.95);border-left:1px solid rgba(255,255,255,.9)}
-@media(max-width:360px){.pkg-list{gap:8px;padding:0 12px}.pkg-card{min-height:172px;padding-left:10px;padding-right:10px}.category-tabs{margin-left:12px;margin-right:12px}.checkout-btn{padding:12px}.checkout-bar{left:10px;right:10px}}
+@media(max-width:360px){.pkg-list{gap:12px;padding:0 12px}.pkg-card{height:122px;min-height:122px;padding:35px 10px 3px}.category-tabs{margin-left:12px;margin-right:12px}.checkout-btn{padding:12px}.checkout-bar{left:14px;right:14px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -555,16 +588,10 @@ html,body{overflow:hidden}
         </div>
         <div id="panel-lvl" class="category-panel" role="tabpanel">
           <div class="pkg-list" id="listLvl"></div>
-        </div>
-        <div class="checkout-bar" id="checkoutBar" aria-live="polite">
-          <div class="checkout-summary">
-            <div class="checkout-items" id="checkoutItems"></div>
-            <div class="checkout-total" id="checkoutTotal"></div>
+          <div class="level-warning" id="levelWarning">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+            <span id="levelWarningText"></span>
           </div>
-          <button class="btn btn-primary checkout-btn" id="checkoutContinue">
-            <span id="checkoutContinueTxt"></span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
         </div>
       </div>
 
@@ -638,6 +665,17 @@ html,body{overflow:hidden}
       </div>
     </div>
 
+    <div class="checkout-bar" id="checkoutBar" aria-live="polite">
+      <div class="checkout-summary">
+        <div class="checkout-items" id="checkoutItems"></div>
+        <div class="checkout-total" id="checkoutTotal"></div>
+      </div>
+      <button class="btn btn-primary checkout-btn" id="checkoutContinue">
+        <span id="checkoutContinueTxt"></span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
     <!-- TAB BAR -->
     <div class="tab-bar">
       <button class="tab-btn on" data-tab="home">
@@ -701,7 +739,6 @@ html,body{overflow:hidden}
       </div>
       <span class="sum-price" id="payPrice">—</span>
     </div>
-    <p class="pay-note" id="payTo"></p>
     <div class="pay-actions">
       <button class="pay-action pay-alif" id="payAlif"><i class="fa-solid fa-wallet"></i><span id="payAlifTxt"></span></button>
       <button class="pay-action pay-dc" id="payDC"><i class="fa-solid fa-building-columns"></i><span id="payDCTxt"></span></button>
@@ -910,7 +947,6 @@ const TR = {
     tgReq:'Telegram username лозим аст',
     next:'Идома',
     payDet:'Тафсилоти пардохт',
-    payTo:'Ба ин рақам маблағ интиқол диҳед:',
     copy:'Нусха', copied:'Нусха шуд',
     payWarn:'Маблағро дақиқ фиристед ва скриншотро нигоҳ доред.',
     upSS:'Скриншотро бор кунед',
@@ -974,7 +1010,6 @@ const TR = {
     tgReq:'Telegram username обязателен',
     next:'Далее',
     payDet:'Реквизиты оплаты',
-    payTo:'Переведите точную сумму:',
     copy:'Копировать', copied:'Скопировано',
     payWarn:'Переведите точную сумму и сохраните скриншот.',
     upSS:'Загрузите скриншот',
@@ -1038,7 +1073,6 @@ const TR = {
     tgReq:'Telegram username is required',
     next:'Next',
     payDet:'Payment Details',
-    payTo:'Transfer the exact amount to:',
     copy:'Copy', copied:'Copied',
     payWarn:'Transfer the exact amount and save your screenshot.',
     upSS:'Upload Screenshot',
@@ -1133,11 +1167,13 @@ function showScr(id){
   $(id).scrollTop=0;
 }
 function showTab(name){
+  activeTab=name;
   $$('.tab-page').forEach(p=>p.classList.remove('on'));
   $('tp-'+name).classList.add('on');
   $$('.tab-btn').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
   if(name==='orders') renderOrders();
   if(name==='settings'){ updateUI(); renderFAQ(); }
+  updateCheckout();
 }
 
 // ── STORAGE ──────────────────────────────────
@@ -1266,6 +1302,7 @@ function renderLvlPkgs(containerId){
 }
 
 let activeCategory='dia';
+let activeTab='home';
 function showCategory(category){
   activeCategory=category;
   $$('.category-tab').forEach(tab=>{
@@ -1421,7 +1458,6 @@ function updateUI(){
   $('titleUID').textContent=t('enterUID');
   $('btnUIDTxt').textContent=t('next');
   $('titlePay').textContent=t('payDet');
-  $('payTo').textContent=t('payTo');
   $('payWarn').textContent=t('payWarn');
   $('btnPayTxt').textContent=t('next');
   $('cpTxt1').textContent=t('copy');
@@ -1674,12 +1710,13 @@ function init(){
 // catalog data, presentation, and the client-side order flow before submission.
 Object.assign(TR.tj,{
   lvlTab:'Прокачкаи сатҳ',continueCheckout:'Идома',currency:'смн',selected:'интихоб шуд',
+  levelWarning:'⚠️ Ҳар бастаи пропуск прокачки дар як аккаунт ТАНҲО якбор харида мешавад. Агар бастаи интихобшуда аллакай дар аккаунти шумо харида шуда бошад, на вақти худро гиред, на аз моро!',
   discount:'−1.50',discountUnit:'/ дона',payAlif:'Пардохт тавассути Alif Mobi',
   payDC:'Пардохт тавассути Dushanbe City',payOther:'Тавассути бонки дигар',
   payReminder:'Лутфан маблағро дақиқ {amount} смн фиристода, дар менюи навбатӣ скриншоти чекро бор кунед.',
   bankTitle:'Пардохт тавассути бонки дигар',
   bankSteps:['Барномаи бонкии худро кушоед.','Интиқол ба ҳамёнро интихоб кунед.','Бонкро интихоб кунед: Dushanbe City.','Рақами телефонро ворид кунед:','Маблағро дақиқ {amount} смн фиристода, чекро скриншот гиред.'],
-  understood:'Фаҳмо шуд!',copyNumber:'Нусха',statusPending:'Дар интизорӣ',
+  understood:'Фаҳмо шуд!',copyNumber:'Нусха',
   detailPackages:'Бастаҳо',detailTotal:'Ҳамагӣ пардохт шуд',detailUID:'UID бозингар',detailDate:'Сана ва вақт',
   imageFail:'Ин акс кушода нашуд. Лутфан онро ҳамчун JPEG интихоб кунед ё аз нав гиред.',
   imageProcessing:'Акс коркард мешавад…',noSelection:'Аввал як бастаро интихоб кунед.',
@@ -1691,12 +1728,13 @@ Object.assign(TR.tj,{
 });
 Object.assign(TR.ru,{
   lvlTab:'Пропуск прокачки',continueCheckout:'Продолжить',currency:'смн',selected:'выбрано',
+  levelWarning:'⚠️ Каждый набор пропуска прокачки покупается на один аккаунт ТОЛЬКО один раз. Если выбранный набор уже куплен на вашем аккаунте, не тратьте ни своё, ни наше время!',
   discount:'−1.50',discountUnit:'/ шт.',payAlif:'Оплатить через Alif Mobi',
   payDC:'Оплатить через Dushanbe City',payOther:'Через другой банк',
   payReminder:'Переведите точную сумму {amount} смн, а на следующем шаге загрузите скриншот чека.',
   bankTitle:'Оплата через другой банк',
   bankSteps:['Откройте приложение своего банка.','Выберите перевод на кошелёк.','Выберите банк: Dushanbe City.','Введите номер телефона:','Переведите ровно {amount} смн и сделайте скриншот чека.'],
-  understood:'Понятно!',copyNumber:'Копировать',statusPending:'В ожидании',
+  understood:'Понятно!',copyNumber:'Копировать',
   detailPackages:'Пакеты',detailTotal:'Оплачено всего',detailUID:'UID игрока',detailDate:'Дата и время',
   imageFail:'Не удалось открыть это изображение. Выберите JPEG или сделайте снимок ещё раз.',
   imageProcessing:'Обработка изображения…',noSelection:'Сначала выберите пакет.',
@@ -1708,12 +1746,13 @@ Object.assign(TR.ru,{
 });
 Object.assign(TR.en,{
   lvlTab:'Level Up Pass',continueCheckout:'Continue',currency:'TJS',selected:'selected',
+  levelWarning:'⚠️ Each Level-Up Pass package can be purchased ONLY once per account. If the selected package has already been purchased on your account, please do not waste your time or ours!',
   discount:'−1.50',discountUnit:'/ unit',payAlif:'Pay via Alif Mobi',
   payDC:'Pay via Dushanbe City',payOther:'Pay via another bank',
   payReminder:'Send exactly {amount} TJS, then upload a screenshot of the receipt on the next screen.',
   bankTitle:'Pay via another bank',
   bankSteps:['Open your banking app.','Choose transfer to wallet.','Choose bank: Dushanbe City.','Enter the phone number:','Send exactly {amount} TJS and take a screenshot of the receipt.'],
-  understood:'Got it!',copyNumber:'Copy',statusPending:'Pending',
+  understood:'Got it!',copyNumber:'Copy',
   detailPackages:'Packages',detailTotal:'Total paid',detailUID:'Player UID',detailDate:'Date and time',
   imageFail:'This image could not be opened. Choose a JPEG or take the photo again.',
   imageProcessing:'Processing image…',noSelection:'Select at least one package first.',
@@ -1730,11 +1769,13 @@ TR.tj.howSteps[3]='Аз Alif Mobi, Dushanbe City ё бонки дигар маб
 TR.ru.howSteps[3]='Переведите точную сумму через Alif Mobi, Dushanbe City или другой банк.';
 TR.en.howSteps[3]='Transfer the exact amount via Alif Mobi, Dushanbe City, or another bank.';
 const selectedPackages=new Map();
+let checkoutTotalFormatted='0.00';
 let processingImage=false;
 let previewObjectUrl=null;
 function tr(key){return TR[lang]?.[key]??key;}
 function fmtMoney(value){return (Math.round((Number(value)||0)*100)/100).toFixed(2);}
 function currencyLabel(){return tr('currency');}
+function currentPaymentTotalText(){return curOrder.totalText||checkoutTotalFormatted;}
 function packagePrice(pkg,qty){
   return pkg.k==='vWeek'&&qty>=2?14.50:Number(pkg.p);
 }
@@ -1771,8 +1812,9 @@ function packageCard(p,isLevel=false){
   const badge=isVoucher&&p.k==='vWeek'&&qty>=2
     ?`<span class="discount-badge">${safeText(tr('discount'))} −1.50${safeText(tr('discountUnit'))}</span>`:'';
   const klass=`pkg-card${chosen?' hi':''}${isVoucher?` vou-card voucher-${p.voucher}`:''}`;
+  const checkmark=chosen?'<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 8.2 3.1 3.1L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>':'';
   return `<div class="${klass}" data-k="${safeText(p.k)}">
-    <div class="pkg-top"><span class="pkg-icon">${icon}</span>${badge}<button type="button" class="pkg-check" aria-label="${safeText(pkgName(p))}: ${safeText(chosen?tr('selected'):tr('selectPackage'))}" aria-pressed="${chosen}">${chosen?'✅':''}</button></div>
+    <div class="pkg-top"><span class="pkg-icon">${icon}</span>${badge}<button type="button" class="pkg-check" aria-label="${safeText(pkgName(p))}: ${safeText(chosen?tr('selected'):tr('selectPackage'))}" aria-pressed="${chosen}">${checkmark}</button></div>
     <div class="pkg-info"><p class="pkg-name">${name}</p><p class="pkg-price">${fmtMoney(unit)} ${safeText(currencyLabel())}</p></div>
     <div class="pkg-bottom">${chosen?`<div class="qty-stepper" aria-label="${safeText(pkgName(p))}: ${safeText(tr('quantity'))}"><button type="button" data-step="-1" aria-label="−">−</button><span>${qty}</span><button type="button" data-step="1" aria-label="+">+</button></div>`:'<span aria-hidden="true"></span>'}</div>
   </div>`;
@@ -1787,8 +1829,8 @@ function renderPackageList(containerId,list,isLevel=false){
       if(step){
         e.stopPropagation();
         const next=(selectedPackages.get(key)||1)+Number(step.dataset.step);
-        if(next<1)selectedPackages.delete(key);
-        else selectedPackages.set(key,next);
+        if(next<1)return;
+        selectedPackages.set(key,next);
         renderHome();
         return;
       }
@@ -1812,23 +1854,23 @@ function updateCheckout(){
     const p=PKGS.find(x=>x.k===key)||LVL_PKGS.find(x=>x.k===key);
     if(p)selected.push(shortPackageName(p));
   });
-  bar.classList.toggle('on',selected.length>0);
+  checkoutTotalFormatted=fmtMoney(selectedTotal());
+  bar.classList.toggle('on',selected.length>0&&activeTab==='home');
   $('checkoutItems').textContent=selected.join(', ');
-  $('checkoutTotal').textContent=`${fmtMoney(selectedTotal())} ${currencyLabel()}`;
+  $('checkoutTotal').textContent=`${checkoutTotalFormatted} ${currencyLabel()}`;
   $('checkoutContinueTxt').textContent=tr('continueCheckout');
 }
 function renderHome(){
   renderPkgs('listDia','dia');renderPkgs('listVou','vou');renderLvlPkgs('listLvl');
   $('catDia').textContent=tr('dia');$('catVou').textContent=tr('vou');$('catLvl').textContent=tr('lvlTab');
+  $('levelWarningText').textContent=tr('levelWarning');
   showCategory(activeCategory);updateCheckout();
 }
 function showModal(id){
   const o=getOrds().find(x=>x.id===id);if(!o)return;
   const date=new Date(o.date);
-  const status=o.status==='pending'?tr('statusPending'):safeText(o.status||tr('statusPending'));
   $('mTitle').textContent=o.id;
   $('mBody').innerHTML=`<div class="ord-meta">
-    <p><span class="ord-status">${status}</span></p>
     <p><b>${safeText(tr('detailDate'))}:</b> ${safeText(date.toLocaleString(lang==='tj'?'tg-TJ':lang==='ru'?'ru-RU':'en-US'))}</p>
     <p><b>${safeText(tr('detailUID'))}:</b> ${safeText(o.uid)}</p>
     <p><b>${safeText(tr('detailPackages'))}:</b> ${safeText(o.pkgName)}</p>
@@ -1841,8 +1883,11 @@ function renderOrders(){
   if(!ords.length){c.innerHTML='';$('ordEmpty').classList.remove('hide');return;}
   $('ordEmpty').classList.add('hide');
   c.innerHTML=ords.map(o=>`<div class="ord-card" data-id="${safeText(o.id)}">
-    <div class="ord-top"><span class="ord-id">${safeText(o.id)}</span><span class="ord-status">${o.status==='pending'?safeText(tr('statusPending')):safeText(o.status||tr('statusPending'))}</span></div>
-    <div class="ord-det">${safeText(o.pkgName)} — ${safeText(o.price)}<br>${safeText(tr('uidShort'))}: ${safeText(o.uid)}</div>
+    <div class="ord-top"><span class="ord-id">${safeText(o.id)}</span></div>
+    <div class="ord-det">${safeText(tr('detailDate'))}: ${safeText(new Date(o.date).toLocaleString(lang==='tj'?'tg-TJ':lang==='ru'?'ru-RU':'en-US'))}<br>
+      ${safeText(tr('detailPackages'))}: ${safeText(o.pkgName)}<br>
+      ${safeText(tr('detailUID'))}: ${safeText(o.uid)}<br>
+      ${safeText(tr('detailTotal'))}: ${safeText(o.price)}</div>
   </div>`).join('');
   c.querySelectorAll('.ord-card').forEach(card=>card.onclick=()=>showModal(card.dataset.id));
 }
@@ -1859,12 +1904,12 @@ function updateUI(){
   $('curLang').textContent={tj:'Тоҷикӣ',ru:'Русский',en:'English'}[lang];
   $$('#langDD .lang-opt').forEach(o=>o.classList.toggle('on',o.dataset.l===lang));
   text('titleUID','enterUID');text('btnUIDTxt','next');text('titlePay','payDet');
-  text('payTo','payTo');text('btnPayTxt','next');text('titleSS','upSS');text('uploadTxt','selSS');
+  text('btnPayTxt','next');text('titleSS','upSS');text('uploadTxt','selSS');
   text('btnConfirmTxt','confirm');text('confTitle','sent');text('confSub','sentSub');text('btnDoneTxt','done');
   text('payAlifTxt','payAlif');text('payDCTxt','payDC');text('payOtherTxt','payOther');
-  $('payReminder').textContent=tr('payReminder').replace('{amount}',fmtMoney(selectedTotal()));
+  $('payReminder').textContent=tr('payReminder').replace('{amount}',currentPaymentTotalText());
   text('bankTitle','bankTitle');text('bankCopyTxt','copyNumber');text('bankDone','understood');
-  $('bankSteps').innerHTML=tr('bankSteps').map((step,i)=>`<li>${safeText(step.replace('{amount}',fmtMoney(selectedTotal())))}</li>`).join('');
+  $('bankSteps').innerHTML=tr('bankSteps').map((step,i)=>`<li>${safeText(step.replace('{amount}',currentPaymentTotalText()))}</li>`).join('');
   $('checkoutContinueTxt').textContent=tr('continueCheckout');
   renderFAQ();renderOrders();renderHome();
 }
@@ -1909,8 +1954,10 @@ function init(){
     const ids=Array.from(selectedPackages.keys());
     curOrder.pkg=ids.join(',');
     curOrder.pkgName=pieces.join(', ');
-    curOrder.price=`${fmtMoney(selectedTotal())} ${currencyLabel()}`;
+    curOrder.totalText=checkoutTotalFormatted;
+    curOrder.price=`${curOrder.totalText} ${currencyLabel()}`;
     $('payPkg').textContent=curOrder.pkgName;$('payPrice').textContent=curOrder.price;
+    $('payReminder').textContent=tr('payReminder').replace('{amount}',curOrder.totalText);
     showWarnModal();
   };
   $('btnTg').onclick=()=>window.open(`https://t.me/${TG_ADMIN}`,'_blank','noopener,noreferrer');
@@ -1935,8 +1982,8 @@ function init(){
     if(!/^\d{5,12}$/.test(uid)){$('errUID').textContent=tr('uidBad');$('errUID').classList.remove('hide');$('rowUID').classList.add('err');return;}
     $('errUID').classList.add('hide');$('rowUID').classList.remove('err');curOrder.uid=uid;showScr('scr-pay');
   };
-  $('payAlif').onclick=()=>openPaymentLink(`https://alifmobi.page.link/providers?id=124&amount=${fmtMoney(selectedTotal())}&account=800076063`);
-  $('payDC').onclick=()=>openPaymentLink(`http://pay.dc.tj/?a=9762000239098071&s=${fmtMoney(selectedTotal())}&c=&f1=133`);
+  $('payAlif').onclick=()=>openPaymentLink(`https://alifmobi.page.link/providers?id=124&amount=${currentPaymentTotalText()}&account=800076063`);
+  $('payDC').onclick=()=>openPaymentLink(`http://pay.dc.tj/?a=9762000239098071&s=${currentPaymentTotalText()}&c=&f1=133`);
   $('payOther').onclick=showBankModal;
   $('bankOv').onclick=hideBankModal;$('bankClose').onclick=hideBankModal;$('bankDone').onclick=hideBankModal;
   $('bankCopy').onclick=()=>copyValue('800076063',$('bankCopy'));
