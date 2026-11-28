@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-  html,body{width:100vw;height:134vw;overflow:hidden;position:relative}
-  .bg{position:absolute;inset:0;width:100vw;height:134vw;object-fit:fill}
-  .val{position:absolute;right:15.5vw;text-align:right;font-weight:800;font-size:2.7vw;color:#0f172a;max-width:44vw;line-height:1.18;word-break:break-word}
-  #id{top:63.5vw}
-  #pkg{top:74.6vw}
-  #price{top:85.7vw;color:#059669;font-size:2.9vw}
-  #uid{top:96.8vw;color:#0284c7;font-size:2.9vw}
+  html,body{width:1000px;height:1340px;overflow:hidden;position:relative}
+  .bg{position:absolute;inset:0;width:1000px;height:1340px;object-fit:fill}
+  .val{position:absolute;right:155px;text-align:right;font-weight:800;font-size:27px;color:#0f172a;max-width:440px;line-height:1.18;word-break:break-word}
+  #id{top:635px}
+  #pkg{top:746px}
+  #price{top:857px;color:#059669;font-size:29px}
+  #uid{top:968px;color:#0284c7;font-size:29px}
 </style>
 </head>
 <body>
@@ -25,7 +25,7 @@
     const pkg = p.get('pkg') || '';
     const pkgEl = document.getElementById('pkg');
     pkgEl.textContent = pkg;
-    if (pkg.length > 22) { pkgEl.style.fontSize = '2.1vw'; pkgEl.style.top = '73.8vw'; }
+    if (pkg.length > 22) { pkgEl.style.fontSize = '21px'; pkgEl.style.top = '738px'; }
     const rawPrice = Number(p.get('price'));
     document.getElementById('price').textContent = (Number.isFinite(rawPrice) ? rawPrice.toFixed(2) : (p.get('price') || '')) + ' сомонӣ';
     document.getElementById('uid').textContent = p.get('uid') || '';
