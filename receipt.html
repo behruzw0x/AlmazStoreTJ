@@ -1,34 +1,116 @@
+
 <!DOCTYPE html>
 <html lang="tg">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-  html,body{width:100vw;height:100vw;overflow:hidden;position:relative}
-  .bg{position:absolute;inset:0;width:100vw;height:100vw;object-fit:fill}
-  .val{position:absolute;right:15.5vw;text-align:right;font-weight:800;font-size:2.7vw;color:#0f172a;max-width:44vw;line-height:1.18;word-break:break-word}
-  #id{top:44.5vw}
-  #pkg{top:52.8vw}
-  #price{top:61.0vw;color:#059669;font-size:2.9vw}
-  #uid{top:69.2vw;color:#0284c7;font-size:2.9vw}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.receipt {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1147 / 1536;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.val {
+  position: absolute;
+  right: 15.5%;
+  transform: translateY(-50%);
+  text-align: right;
+  font-weight: 800;
+  font-size: 2.7vw;
+  color: #0f172a;
+  max-width: 44%;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+#id {
+  top: 44.7%;
+}
+
+#pkg {
+  top: 52.1%;
+}
+
+#price {
+  top: 59.9%;
+  color: #059669;
+  font-size: 2.9vw;
+}
+
+#uid {
+  top: 68.4%;
+  color: #0284c7;
+  font-size: 2.9vw;
+}
+
 </style>
 </head>
+
 <body>
-  <img class="bg" src="receipt-bg.jpg"/>
+
+<div class="receipt">
+
+  <img class="bg" src="receipt-bg.jpg">
+
   <div class="val" id="id"></div>
   <div class="val" id="pkg"></div>
   <div class="val" id="price"></div>
   <div class="val" id="uid"></div>
-  <script>
-    const p = new URLSearchParams(location.search);
-    document.getElementById('id').textContent = p.get('id') || '';
-    const pkg = p.get('pkg') || '';
-    const pkgEl = document.getElementById('pkg');
-    pkgEl.textContent = pkg;
-    if (pkg.length > 22) { pkgEl.style.fontSize = '2.1vw'; pkgEl.style.top = '52.0vw'; }
-    const rawPrice = Number(p.get('price'));
-    document.getElementById('price').textContent = (Number.isFinite(rawPrice) ? rawPrice.toFixed(2) : (p.get('price') || '')) + ' сомонӣ';
-    document.getElementById('uid').textContent = p.get('uid') || '';
-  </script>
+
+</div>
+
+<script>
+const p = new URLSearchParams(location.search);
+
+document.getElementById("id").textContent =
+  p.get("id") || "";
+
+const pkg = p.get("pkg") || "";
+const pkgEl = document.getElementById("pkg");
+
+pkgEl.textContent = pkg;
+
+if (pkg.length > 22) {
+  pkgEl.style.fontSize = "2.1vw";
+}
+
+const rawPrice = Number(p.get("price"));
+
+document.getElementById("price").textContent =
+  (Number.isFinite(rawPrice)
+    ? rawPrice.toFixed(2)
+    : (p.get("price") || "")) + " сомонӣ";
+
+document.getElementById("uid").textContent =
+  p.get("uid") || "";
+
+</script>
+
 </body>
-</html>
+ </html>
+ 
